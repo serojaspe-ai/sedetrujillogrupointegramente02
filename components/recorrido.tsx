@@ -101,7 +101,11 @@ export function Recorrido() {
             <PasoPausa pausa={pausa} onSiguiente={() => setPaso("siguiente")} />
           )}
           {paso === "siguiente" && (
-            <PasoSiguiente respuestas={respuestas} onReiniciar={reiniciar} />
+            <PasoSiguiente
+              respuestas={respuestas}
+              registroId={pausa?.registroId ?? null}
+              onReiniciar={reiniciar}
+            />
           )}
         </div>
 

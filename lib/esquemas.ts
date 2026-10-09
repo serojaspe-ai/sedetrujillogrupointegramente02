@@ -24,9 +24,17 @@ export const respuestaPausaSchema = z.object({
   introduccion: z.string(),
   pasos: z.array(z.string()),
   origen: z.enum(["ia", "demo"]),
+  registroId: z.string().uuid().nullable(),
 });
 
 export type RespuestaPausa = z.infer<typeof respuestaPausaSchema>;
+
+export const cierrePausaSchema = z.object({
+  intensidadFinal: z.number().int().min(0).max(10),
+  accionElegida: z.enum(["esperar", "explicar", "apoyo"]),
+});
+
+export type CierrePausa = z.infer<typeof cierrePausaSchema>;
 
 export const adaptacionIaSchema = z.object({
   introduccion: z.string().min(1).max(220),

@@ -3,6 +3,7 @@ import { elegirActividad } from "@/lib/seleccion";
 import { adaptarPausa } from "@/lib/pausa-ia";
 import { solicitudPausaSchema } from "@/lib/esquemas";
 import { SITUACION_OTROS } from "@/lib/catalogo";
+import { codigoPausa, crearRegistroPausa } from "@/lib/registros";
 
 export async function POST(request: Request) {
   const cuerpo: unknown = await request.json().catch(() => null);
@@ -27,10 +28,19 @@ export async function POST(request: Request) {
     minutos,
   });
 
+  const registroId = await crearRegistroPausa({
+    emocion,
+    intensidadInicial: intensidad,
+    situacion,
+    minutos,
+    pausaCodigo: codigoPausa(actividad.id),
+  });
+
   return NextResponse.json({
     actividad: { id: actividad.id, nombre: actividad.nombre, minutos },
     introduccion: adaptacion.introduccion,
     pasos: adaptacion.pasos,
     origen: adaptacion.origen,
+    registroId,
   });
 }

@@ -15,22 +15,44 @@ import { SelectorIntensidad } from "./selector-intensidad";
 
 type Props = {
   respuestas: RespuestasSentir;
+  registroId: string | null;
   onReiniciar: () => void;
 };
 
-export function PasoSiguiente({ respuestas, onReiniciar }: Props) {
+export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
+  const [guardando, setGuardando] = useState(false);
+  const [errorGuardado, setErrorGuardado] = useState<string | null>(null);
   const [intensidadAhora, setIntensidadAhora] = useState<number | null>(null);
   const [pasoElegido, setPasoElegido] = useState<PasoSiguienteId | null>(null);
   const [confirmado, setConfirmado] = useState(false);
   const [errores, setErrores] = useState<{ intensidad?: string; paso?: string }>({});
 
-  function confirmar() {
+  async function confirmar() {
     const nuevosErrores = {
       intensidad: intensidadAhora === null ? "Elige cómo te sientes ahora." : undefined,
       paso: pasoElegido === null ? "Elige el paso que quieres dar." : undefined,
     };
     setErrores(nuevosErrores);
-    if (!nuevosErrores.intensidad && !nuevosErrores.paso) setConfirmado(true);
+    if (intensidadAhora === null || pasoElegido === null) return;
+
+    if (registroId) {
+      setGuardando(true);
+      setErrorGuardado(null);
+      try {
+        const respuesta = await fetch(`/api/pausa/${registroId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ intensidadFinal: intensidadAhora, accionElegida: pasoElegido }),
+        });
+        if (!respuesta.ok) throw new Error(`Estado ${respuesta.status}`);
+      } catch {
+        setErrorGuardado("No pudimos guardar tu elección. Inténtalo de nuevo.");
+        setGuardando(false);
+        return;
+      }
+      setGuardando(false);
+    }
+    setConfirmado(true);
   }
 
   return (
@@ -134,13 +156,21 @@ export function PasoSiguiente({ respuestas, onReiniciar }: Props) {
           </button>
         </section>
       ) : (
-        <button
-          type="button"
-          onClick={confirmar}
-          className="h-14 rounded-xl bg-exito text-lg font-semibold text-white transition hover:opacity-90"
-        >
-          Elegir este paso
-        </button>
+        <>
+          {errorGuardado && (
+            <p role="alert" className="text-sm font-medium text-alerta">
+              {errorGuardado}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={confirmar}
+            disabled={guardando}
+            className="h-14 rounded-xl bg-exito text-lg font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
+          >
+            {guardando ? "Guardando…" : "Elegir este paso"}
+          </button>
+        </>
       )}
     </div>
   );

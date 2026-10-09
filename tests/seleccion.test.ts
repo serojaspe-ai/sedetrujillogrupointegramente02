@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { cierrePausaSchema } from "@/lib/esquemas";
+import { codigoPausa } from "@/lib/registros";
 import { elegirActividad } from "@/lib/seleccion";
 import { formatearTiempo, msRestantes, progreso } from "@/lib/temporizador";
 
@@ -31,5 +33,21 @@ describe("temporizador", () => {
     expect(progreso(120_000, 120_000)).toBe(0);
     expect(progreso(120_000, 60_000)).toBe(0.5);
     expect(progreso(120_000, 0)).toBe(1);
+  });
+});
+
+describe("codigoPausa", () => {
+  it("asigna P1, P2 o P3 a cada actividad del catálogo", () => {
+    expect(codigoPausa("volver-presente")).toBe("P1");
+    expect(codigoPausa("antes-responder")).toBe("P2");
+    expect(codigoPausa("una-cosa-a-la-vez")).toBe("P3");
+  });
+});
+
+describe("cierrePausaSchema", () => {
+  it("acepta intensidad final entera de 0 a 10 y una acción válida", () => {
+    expect(cierrePausaSchema.safeParse({ intensidadFinal: 4, accionElegida: "apoyo" }).success).toBe(true);
+    expect(cierrePausaSchema.safeParse({ intensidadFinal: 11, accionElegida: "apoyo" }).success).toBe(false);
+    expect(cierrePausaSchema.safeParse({ intensidadFinal: 4, accionElegida: "otra" }).success).toBe(false);
   });
 });
