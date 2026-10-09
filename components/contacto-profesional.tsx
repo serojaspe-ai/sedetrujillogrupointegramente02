@@ -11,7 +11,7 @@ export function ContactoProfesional() {
       <button
         type="button"
         onClick={() => dialogo.current?.showModal()}
-        className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-pausa hover:bg-pausa-suave"
+        className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-pausa transition-all duration-200 hover:-translate-y-0.5 hover:bg-pausa-suave active:scale-[0.97] motion-reduce:transform-none"
       >
         <IconoMensaje />
         Quiero hablar con alguien

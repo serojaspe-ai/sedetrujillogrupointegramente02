@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Leaf } from "lucide-react";
 import type { RespuestaPausa, SolicitudPausa } from "@/lib/esquemas";
 import { respuestaPausaSchema } from "@/lib/esquemas";
 import { ContactoProfesional } from "./contacto-profesional";
@@ -69,25 +70,46 @@ export function Recorrido() {
   const indice = ORDEN.indexOf(paso);
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-6 px-4 py-8 sm:py-12">
-      <header className="flex w-full max-w-xl flex-col gap-1">
-        <h1 className="text-3xl font-bold text-tinta">Pausa UCV</h1>
-        <p className="text-base text-tinta-suave">Una pausa antes de responder.</p>
+    <main className="relative flex min-h-screen flex-col items-center gap-6 px-4 py-8 sm:py-12">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-24 top-16 h-72 w-72 rounded-full bg-[#FBE7EF] opacity-70 blur-3xl motion-safe:animate-flotar" />
+        <div className="absolute -right-28 top-1/3 h-80 w-80 rounded-full bg-[#EAF4FC] opacity-90 blur-3xl motion-safe:animate-flotar-lento" />
+        <div className="absolute -bottom-24 left-1/4 h-72 w-72 rounded-full bg-[#E3F6F3] opacity-80 blur-3xl motion-safe:animate-flotar" />
+      </div>
+
+      <header className="flex w-full max-w-xl items-center gap-4">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#1F7A6D] shadow-sm motion-safe:animate-pop">
+          <Leaf aria-hidden="true" size={24} />
+        </span>
+        <div className="flex flex-col">
+          <h1 className="text-3xl font-bold text-tinta">Pausa UCV</h1>
+          <p className="text-base text-tinta-suave">Una pausa antes de responder.</p>
+        </div>
       </header>
 
       <section
         aria-label="Recorrido de pausa"
-        className="w-full max-w-xl overflow-hidden rounded-2xl border border-linea bg-white shadow-sm"
+        className="w-full max-w-xl overflow-hidden rounded-3xl border border-white bg-white shadow-[0_20px_50px_-24px_rgba(39,72,214,0.35)]"
       >
-        <div className="flex items-center gap-3 border-b border-linea bg-pausa-suave px-5 py-4">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-pausa text-base font-bold text-white">
-            {indice + 1}
-          </span>
-          <h2 className="text-xl font-semibold">{TITULOS[paso]}</h2>
-          <span className="ml-auto whitespace-nowrap text-sm text-tinta-suave">Paso {indice + 1} de 3</span>
+        <div className="bg-gradient-to-r from-[#FBE7EF] via-[#EAF4FC] to-[#E3F6F3] px-5 pb-4 pt-5">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-pausa text-base font-bold text-white shadow-md shadow-pausa/25">
+              {indice + 1}
+            </span>
+            <h2 className="text-xl font-semibold">{TITULOS[paso]}</h2>
+            <span className="ml-auto whitespace-nowrap text-sm text-tinta-suave">
+              Paso {indice + 1} de 3
+            </span>
+          </div>
+          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/80">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-pausa to-[#3fb8a6] transition-[width] duration-500 ease-out motion-reduce:transition-none"
+              style={{ width: `${((indice + 1) / ORDEN.length) * 100}%` }}
+            />
+          </div>
         </div>
 
-        <div key={`${recorridoKey}-${paso}`} className="px-5 py-6 sm:px-7">
+        <div key={`${recorridoKey}-${paso}`} className="px-5 py-7 motion-safe:animate-entrada sm:px-7">
           {paso === "sentir" && (
             <PasoSentir
               respuestas={respuestas}
@@ -109,7 +131,7 @@ export function Recorrido() {
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-1 border-t border-linea px-5 py-3">
+        <div className="flex flex-col items-center gap-1 border-t border-linea/70 px-5 py-3">
           <ContactoProfesional />
         </div>
       </section>

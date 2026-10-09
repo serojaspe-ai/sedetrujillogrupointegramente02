@@ -1,4 +1,4 @@
-export const INTERVALO_TEMPORIZADOR_MS = 250;
+export const INTERVALO_TEMPORIZADOR_MS = 100;
 
 export function msRestantes(finMs: number, ahoraMs: number): number {
   return Math.max(0, finMs - ahoraMs);

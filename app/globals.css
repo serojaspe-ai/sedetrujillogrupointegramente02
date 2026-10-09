@@ -10,6 +10,43 @@
   --color-exito: #17765e;
   --color-alerta: #b42318;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --animate-entrada: entrada 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-flotar: flotar 16s ease-in-out infinite;
+  --animate-flotar-lento: flotar-lento 22s ease-in-out infinite;
+  --animate-respirar: respirar 4s ease-in-out infinite;
+  --animate-trazar: trazar 650ms cubic-bezier(0.65, 0, 0.35, 1) 120ms both;
+  --animate-aparecer: aparecer 280ms ease-out both;
+
+  @keyframes entrada {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes pop {
+    0% { transform: scale(0.94); }
+    100% { transform: scale(1); }
+  }
+  @keyframes flotar {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(12px, -18px, 0) scale(1.04); }
+  }
+  @keyframes flotar-lento {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-16px, 14px, 0); }
+  }
+  @keyframes respirar {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.025); }
+  }
+  @keyframes trazar {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+  }
 }
 
 html {

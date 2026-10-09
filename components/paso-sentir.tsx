@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Angry, Frown, Meh } from "lucide-react";
+import { Angry, Check, Frown, Meh } from "lucide-react";
 import {
   DESCRIPCION_MAX_CARACTERES,
   EMOCIONES,
@@ -14,6 +14,7 @@ import {
   type Situacion,
 } from "@/lib/catalogo";
 import type { SolicitudPausa } from "@/lib/esquemas";
+import { BASE_BOTON, RELLENO_PRIMARIO, TARJETA_ACTIVA, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
 import { SelectorIntensidad } from "./selector-intensidad";
 
 export type RespuestasSentir = {
@@ -34,10 +35,10 @@ type Props = {
   onEncontrar: (solicitud: SolicitudPausa) => void;
 };
 
-const ICONOS: Record<Emocion, typeof Frown> = {
-  frustracion: Frown,
-  enojo: Angry,
-  inquietud: Meh,
+const EMOCION_VISUAL: Record<Emocion, { Icono: typeof Frown; fondo: string; tinta: string }> = {
+  frustracion: { Icono: Frown, fondo: "bg-[#FBE7EF]", tinta: "text-[#B5487F]" },
+  enojo: { Icono: Angry, fondo: "bg-[#F8D3E2]", tinta: "text-[#9C2F66]" },
+  inquietud: { Icono: Meh, fondo: "bg-[#E3F6F3]", tinta: "text-[#1F7A6D]" },
 };
 
 export function validarRespuestas(
@@ -85,11 +86,11 @@ export function PasoSentir({
   }
 
   return (
-    <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-8">
       <Bloque id="pregunta-emocion" titulo="¿Qué estás sintiendo?" error={errores.emocion}>
-        <div role="radiogroup" aria-labelledby="pregunta-emocion" className="flex flex-col gap-2">
+        <div role="radiogroup" aria-labelledby="pregunta-emocion" className="grid grid-cols-3 gap-3">
           {(Object.keys(EMOCIONES) as Emocion[]).map((id) => {
-            const Icono = ICONOS[id];
+            const { Icono, fondo, tinta } = EMOCION_VISUAL[id];
             const activo = respuestas.emocion === id;
             return (
               <button
@@ -98,15 +99,26 @@ export function PasoSentir({
                 role="radio"
                 aria-checked={activo}
                 onClick={() => cambiar({ emocion: id })}
-                className={`flex h-14 items-center gap-3 rounded-xl border px-4 text-left text-base transition ${
-                  activo
-                    ? "border-pausa bg-pausa-suave font-semibold text-pausa"
-                    : "border-linea bg-white hover:border-pausa"
+                className={`${TARJETA_BASE} relative flex flex-col items-center gap-2 rounded-2xl border bg-white px-2 py-4 text-center text-sm ${
+                  activo ? `${TARJETA_ACTIVA} motion-safe:animate-pop` : "border-linea"
                 }`}
               >
-                <Icono aria-hidden="true" size={22} />
-                <span className="flex-1">{EMOCIONES[id]}</span>
-                {activo && <span aria-hidden="true">✓</span>}
+                <span
+                  className={`flex h-14 w-14 items-center justify-center rounded-full transition-transform duration-300 ${fondo} ${tinta} ${
+                    activo ? "scale-110" : ""
+                  }`}
+                >
+                  <Icono aria-hidden="true" size={30} strokeWidth={2} />
+                </span>
+                <span className={activo ? "font-semibold text-pausa" : "text-tinta"}>{EMOCIONES[id]}</span>
+                {activo && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-pausa text-white motion-safe:animate-pop"
+                  >
+                    <Check size={12} strokeWidth={3} />
+                  </span>
+                )}
               </button>
             );
           })}
@@ -114,7 +126,6 @@ export function PasoSentir({
       </Bloque>
 
       <Bloque id="pregunta-intensidad" titulo="¿Qué tan intensa es?" error={errores.intensidad}>
-        <p className="text-sm text-tinta-suave">Elige un número del 0 (nada) al 10 (muy intensa).</p>
         <SelectorIntensidad
           id="pregunta-intensidad"
           valor={respuestas.intensidad}
@@ -133,19 +144,26 @@ export function PasoSentir({
                 role="radio"
                 aria-checked={activo}
                 onClick={() => cambiar({ situacion: id })}
-                className={`min-h-12 rounded-xl border px-4 py-3 text-left text-base transition ${
-                  activo
-                    ? "border-pausa bg-pausa-suave font-semibold text-pausa"
-                    : "border-linea bg-white hover:border-pausa"
+                className={`${TARJETA_BASE} flex min-h-12 items-center gap-3 rounded-xl border bg-white px-4 py-3 text-left text-base ${
+                  activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
+                <span
+                  aria-hidden="true"
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                    activo ? "border-pausa bg-pausa text-white" : "border-tinta-suave/50"
+                  }`}
+                >
+                  {activo && <Check size={12} strokeWidth={3} className="motion-safe:animate-pop" />}
+                </span>
                 {SITUACIONES[id]}
               </button>
             );
           })}
         </div>
+
         {respuestas.situacion === SITUACION_OTROS && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 motion-safe:animate-entrada">
             <label htmlFor="descripcion-otros" className="text-sm font-medium text-tinta">
               Si quieres, cuéntanos un poco más
             </label>
@@ -155,7 +173,7 @@ export function PasoSentir({
               maxLength={DESCRIPCION_MAX_CARACTERES}
               value={respuestas.descripcion}
               onChange={(evento) => cambiar({ descripcion: evento.target.value })}
-              className="rounded-xl border border-linea bg-white px-4 py-3 text-base focus:border-pausa focus:outline-none"
+              className="rounded-xl border border-linea bg-white px-4 py-3 text-base transition-colors focus:border-pausa focus:outline-none focus:ring-2 focus:ring-pausa/15"
             />
             <p className="text-xs text-tinta-suave">
               Para esta demostración, usa una situación ficticia y evita datos personales.
@@ -168,7 +186,7 @@ export function PasoSentir({
       </Bloque>
 
       <Bloque id="pregunta-tiempo" titulo="¿Cuánto tiempo quieres pausar?" error={errores.minutos}>
-        <div role="radiogroup" aria-labelledby="pregunta-tiempo" className="grid grid-cols-3 gap-2">
+        <div role="radiogroup" aria-labelledby="pregunta-tiempo" className="grid grid-cols-3 gap-3">
           {TIEMPO_OPCIONES.map((minutos) => {
             const activo = respuestas.minutos === minutos;
             return (
@@ -178,10 +196,10 @@ export function PasoSentir({
                 role="radio"
                 aria-checked={activo}
                 onClick={() => cambiar({ minutos })}
-                className={`h-12 rounded-xl border text-base font-semibold transition ${
+                className={`${BASE_BOTON} h-12 rounded-xl border text-base font-semibold ${
                   activo
-                    ? "border-pausa bg-pausa text-white"
-                    : "border-linea bg-white text-pausa hover:border-pausa"
+                    ? "border-pausa bg-pausa text-white shadow-md shadow-pausa/25"
+                    : "border-linea bg-white text-pausa hover:border-pausa hover:shadow-sm"
                 }`}
               >
                 {minutos} min
@@ -201,7 +219,7 @@ export function PasoSentir({
         type="button"
         onClick={encontrar}
         disabled={cargando}
-        className="h-14 rounded-xl bg-pausa text-lg font-semibold text-white transition hover:bg-pausa-oscuro disabled:opacity-60"
+        className={`${BASE_BOTON} ${RELLENO_PRIMARIO} h-14 w-full text-lg font-semibold`}
       >
         {cargando ? "Preparando tu pausa…" : "Encontrar mi pausa"}
       </button>

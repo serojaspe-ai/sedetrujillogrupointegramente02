@@ -10,6 +10,7 @@ import {
   SITUACIONES,
   type PasoSiguienteId,
 } from "@/lib/catalogo";
+import { BASE_BOTON, RELLENO_EXITO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
 import type { RespuestasSentir } from "./paso-sentir";
 import { SelectorIntensidad } from "./selector-intensidad";
 
@@ -56,12 +57,11 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-3">
         <h2 id="pregunta-ahora" className="text-lg font-semibold">
           ¿Cómo te sientes ahora?
         </h2>
-        <p className="text-sm text-tinta-suave">Elige un número del 0 (nada) al 10 (muy intensa).</p>
         <SelectorIntensidad
           id="pregunta-ahora"
           valor={intensidadAhora}
@@ -81,7 +81,7 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
         <h2 id="pregunta-paso" className="text-lg font-semibold">
           ¿Qué quieres hacer?
         </h2>
-        <div role="radiogroup" aria-labelledby="pregunta-paso" className="flex flex-col gap-2">
+        <div role="radiogroup" aria-labelledby="pregunta-paso" className="flex flex-col gap-3">
           {PASO_SIGUIENTE_IDS.map((id) => {
             const activo = pasoElegido === id;
             return (
@@ -95,19 +95,19 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
                   setPasoElegido(id);
                   setErrores((previo) => ({ ...previo, paso: undefined }));
                 }}
-                className={`flex h-14 items-center gap-3 rounded-xl border px-4 text-left text-base transition disabled:cursor-default ${
-                  activo
-                    ? "border-pausa bg-pausa-suave font-semibold text-pausa"
-                    : "border-linea bg-white hover:border-pausa"
+                className={`${TARJETA_BASE} flex min-h-14 items-center gap-3 rounded-2xl border bg-white px-4 text-left text-base disabled:cursor-default ${
+                  activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
                 <span
                   aria-hidden="true"
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                    activo ? "border-pausa" : "border-tinta-suave"
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                    activo ? "border-pausa" : "border-tinta-suave/50"
                   }`}
                 >
-                  {activo && <span className="h-2.5 w-2.5 rounded-full bg-pausa" />}
+                  {activo && (
+                    <span className="h-2.5 w-2.5 rounded-full bg-pausa motion-safe:animate-pop" />
+                  )}
                 </span>
                 {PASOS_SIGUIENTES[id]}
               </button>
@@ -122,10 +122,35 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
       </section>
 
       {confirmado ? (
-        <section aria-labelledby="titulo-resumen" className="flex flex-col gap-3 rounded-2xl border border-exito/40 bg-emerald-50/40 p-5">
-          <h2 id="titulo-resumen" className="text-lg font-semibold text-exito">
-            Tu siguiente paso
-          </h2>
+        <section
+          aria-labelledby="titulo-resumen"
+          className="flex flex-col gap-4 rounded-2xl border border-exito/30 bg-white p-5 shadow-sm motion-safe:animate-entrada"
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E3F6F3]">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-7 w-7 text-exito"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 12.5l4.5 4.5L19 7"
+                  pathLength={1}
+                  strokeDasharray={1}
+                  strokeDashoffset={0}
+                  className="motion-safe:animate-trazar"
+                />
+              </svg>
+            </span>
+            <h2 id="titulo-resumen" className="text-lg font-semibold text-exito">
+              Tu siguiente paso está listo
+            </h2>
+          </div>
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-base">
             <dt className="text-tinta-suave">Emoción</dt>
             <dd className="font-medium">
@@ -149,7 +174,7 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
           <button
             type="button"
             onClick={onReiniciar}
-            className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-pausa font-semibold text-pausa hover:bg-pausa-suave"
+            className={`${BASE_BOTON} inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-pausa bg-white font-semibold text-pausa hover:bg-pausa-suave`}
           >
             <RotateCcw aria-hidden="true" size={18} />
             Iniciar otro recorrido
@@ -166,7 +191,7 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
             type="button"
             onClick={confirmar}
             disabled={guardando}
-            className="h-14 rounded-xl bg-exito text-lg font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
+            className={`${BASE_BOTON} ${RELLENO_EXITO} h-14 text-lg font-semibold`}
           >
             {guardando ? "Guardando…" : "Elegir este paso"}
           </button>
