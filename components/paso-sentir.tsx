@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Angry, Check, Frown, Meh } from "lucide-react";
 import {
   DESCRIPCION_MAX_CARACTERES,
   EMOCIONES,
@@ -14,7 +13,9 @@ import {
   type Situacion,
 } from "@/lib/catalogo";
 import type { SolicitudPausa } from "@/lib/esquemas";
-import { BASE_BOTON, RELLENO_PRIMARIO, TARJETA_ACTIVA, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
+import { BASE_BOTON, RELLENO_PRIMARIO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
+import { IlustracionEmocion } from "./ilustracion-emocion";
+import { MarcaSeleccion } from "./marca-seleccion";
 import { SelectorIntensidad } from "./selector-intensidad";
 
 export type RespuestasSentir = {
@@ -35,30 +36,18 @@ type Props = {
   onEncontrar: (solicitud: SolicitudPausa) => void;
 };
 
-const EMOCION_VISUAL: Record<
-  Emocion,
-  { Icono: typeof Frown; fondo: string; tinta: string; borde: string; bordeSuave: string; sombra: string }
-> = {
+const EMOCION_VISUAL: Record<Emocion, { borde: string; bordeSuave: string; sombra: string }> = {
   frustracion: {
-    Icono: Frown,
-    fondo: "bg-gradient-to-br from-rosa-suave to-rosa-viva",
-    tinta: "text-[#9d174d]",
     borde: "border-rosa-viva",
     bordeSuave: "border-rosa-viva/35",
     sombra: "shadow-[0_14px_30px_-12px_rgba(244,114,182,0.85)]",
   },
   enojo: {
-    Icono: Angry,
-    fondo: "bg-gradient-to-br from-[#ffe4ea] to-[#fb7185]",
-    tinta: "text-[#9f1239]",
     borde: "border-[#fb7185]",
     bordeSuave: "border-[#fb7185]/35",
     sombra: "shadow-[0_14px_30px_-12px_rgba(251,113,133,0.85)]",
   },
   inquietud: {
-    Icono: Meh,
-    fondo: "bg-gradient-to-br from-turquesa-suave to-turquesa-viva",
-    tinta: "text-[#115e59]",
     borde: "border-turquesa-viva",
     bordeSuave: "border-turquesa-viva/35",
     sombra: "shadow-[0_14px_30px_-12px_rgba(45,212,191,0.85)]",
@@ -114,7 +103,7 @@ export function PasoSentir({
       <Bloque id="pregunta-emocion" titulo="¿Qué estás sintiendo?" error={errores.emocion}>
         <div role="radiogroup" aria-labelledby="pregunta-emocion" className="grid grid-cols-3 gap-3">
           {(Object.keys(EMOCIONES) as Emocion[]).map((id) => {
-            const { Icono, fondo, tinta, borde, bordeSuave, sombra } = EMOCION_VISUAL[id];
+            const { borde, bordeSuave, sombra } = EMOCION_VISUAL[id];
             const activo = respuestas.emocion === id;
             return (
               <button
@@ -123,26 +112,17 @@ export function PasoSentir({
                 role="radio"
                 aria-checked={activo}
                 onClick={() => cambiar({ emocion: id })}
-                className={`${TARJETA_BASE} group relative flex flex-col items-center gap-2 rounded-2xl border-2 bg-white px-2 py-4 text-center text-sm motion-safe:hover:-translate-y-1 ${
-                  activo ? `${borde} ${sombra} motion-safe:animate-pop` : bordeSuave
+                className={`${TARJETA_BASE} group relative flex flex-col items-center gap-2 rounded-2xl border-2 bg-white px-2 pb-4 pt-5 text-center text-sm motion-safe:hover:-translate-y-1 ${
+                  activo ? `${borde} ${sombra}` : bordeSuave
                 }`}
               >
-                <span
-                  className={`flex h-16 w-16 items-center justify-center rounded-full shadow-inner transition-transform duration-300 motion-safe:group-hover:scale-105 ${fondo} ${tinta} ${
-                    activo ? "scale-110" : ""
-                  }`}
-                >
-                  <Icono aria-hidden="true" size={32} strokeWidth={2.2} />
-                </span>
+                <MarcaSeleccion activo={activo} className="absolute right-2 top-2" />
+                <IlustracionEmocion
+                  emocion={id}
+                  reaccion={activo}
+                  className="h-20 w-20 transition-transform duration-300 motion-safe:group-hover:scale-105"
+                />
                 <span className={activo ? "font-semibold text-pausa" : "text-tinta"}>{EMOCIONES[id]}</span>
-                {activo && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-pausa text-white motion-safe:animate-pop"
-                  >
-                    <Check size={12} strokeWidth={3} />
-                  </span>
-                )}
               </button>
             );
           })}
@@ -172,14 +152,7 @@ export function PasoSentir({
                   activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
-                <span
-                  aria-hidden="true"
-                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                    activo ? "border-pausa bg-pausa text-white" : "border-tinta-suave/50"
-                  }`}
-                >
-                  {activo && <Check size={12} strokeWidth={3} className="motion-safe:animate-pop" />}
-                </span>
+                <MarcaSeleccion activo={activo} />
                 {SITUACIONES[id]}
               </button>
             );

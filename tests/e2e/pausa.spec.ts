@@ -49,7 +49,9 @@ test.describe("recorrido de pausa", () => {
       const resumen = page.getByRole("region", { name: "Tu siguiente paso" });
       await expect(resumen).toContainText(situacion.texto);
       await expect(resumen).toContainText("Explicar lo que necesito");
-      await expect(resumen).toContainText("7/10 al inicio, 6/10 ahora");
+      await expect(resumen).toContainText("Intensidad inicial");
+      await expect(resumen).toContainText("7/10");
+      await expect(resumen).toContainText("6/10");
 
       await page.getByRole("button", { name: "Iniciar otro recorrido" }).click();
       await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();

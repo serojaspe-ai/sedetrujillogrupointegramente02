@@ -30,7 +30,9 @@ export function PasoPausa({ pausa, onSiguiente }: Props) {
     <div className="flex flex-col items-center gap-7 text-center motion-safe:animate-entrada">
       <p
         className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
-          pausa.origen === "ia" ? "bg-celeste-suave text-[#0369a1]" : "bg-amber-50 text-amber-800"
+          pausa.origen === "ia"
+            ? "bg-celeste-suave text-[#0369a1]"
+            : "border border-dashed border-amber-400 bg-amber-50 text-amber-900"
         }`}
       >
         {pausa.origen === "ia" ? "Pausa adaptada con IA" : "Modo demo: actividad sin adaptación por IA"}

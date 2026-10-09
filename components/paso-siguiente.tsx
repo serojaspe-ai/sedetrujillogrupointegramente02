@@ -10,7 +10,9 @@ import {
   SITUACIONES,
   type PasoSiguienteId,
 } from "@/lib/catalogo";
+import { mensajeCierre } from "@/lib/cierre";
 import { BASE_BOTON, RELLENO_EXITO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
+import { MarcaSeleccion } from "./marca-seleccion";
 import type { RespuestasSentir } from "./paso-sentir";
 import { SelectorIntensidad } from "./selector-intensidad";
 
@@ -56,6 +58,13 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
     setConfirmado(true);
   }
 
+  const situacionTexto =
+    respuestas.situacion === SITUACION_OTROS && respuestas.descripcion.trim()
+      ? respuestas.descripcion.trim()
+      : respuestas.situacion
+        ? SITUACIONES[respuestas.situacion]
+        : "—";
+
   return (
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-3">
@@ -99,16 +108,7 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
                   activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
-                <span
-                  aria-hidden="true"
-                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                    activo ? "border-pausa" : "border-tinta-suave/50"
-                  }`}
-                >
-                  {activo && (
-                    <span className="h-2.5 w-2.5 rounded-full bg-pausa motion-safe:animate-pop" />
-                  )}
-                </span>
+                <MarcaSeleccion activo={activo} />
                 {PASOS_SIGUIENTES[id]}
               </button>
             );
@@ -151,26 +151,26 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
               Tu siguiente paso está listo
             </h2>
           </div>
+
+          {respuestas.intensidad !== null && intensidadAhora !== null && (
+            <p className="rounded-xl bg-celeste-suave p-4 text-base leading-relaxed text-tinta">
+              {mensajeCierre(respuestas.intensidad, intensidadAhora)}
+            </p>
+          )}
+
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-base">
             <dt className="text-tinta-suave">Emoción</dt>
-            <dd className="font-medium">
-              {respuestas.emocion ? EMOCIONES[respuestas.emocion] : "—"}
-            </dd>
-            <dt className="text-tinta-suave">Intensidad</dt>
-            <dd className="font-medium">
-              {respuestas.intensidad ?? "—"}/10 al inicio, {intensidadAhora}/10 ahora
-            </dd>
+            <dd className="font-medium">{respuestas.emocion ? EMOCIONES[respuestas.emocion] : "—"}</dd>
+            <dt className="text-tinta-suave">Intensidad inicial</dt>
+            <dd className="font-medium">{respuestas.intensidad ?? "—"}/10</dd>
+            <dt className="text-tinta-suave">Intensidad final</dt>
+            <dd className="font-medium">{intensidadAhora ?? "—"}/10</dd>
             <dt className="text-tinta-suave">Situación</dt>
-            <dd className="font-medium">
-              {respuestas.situacion === SITUACION_OTROS && respuestas.descripcion.trim()
-                ? respuestas.descripcion.trim()
-                : respuestas.situacion
-                  ? SITUACIONES[respuestas.situacion]
-                  : "—"}
-            </dd>
-            <dt className="text-tinta-suave">Paso elegido</dt>
+            <dd className="font-medium">{situacionTexto}</dd>
+            <dt className="text-tinta-suave">Siguiente acción</dt>
             <dd className="font-medium">{pasoElegido ? PASOS_SIGUIENTES[pasoElegido] : "—"}</dd>
           </dl>
+
           <button
             type="button"
             onClick={onReiniciar}

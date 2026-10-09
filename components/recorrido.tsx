@@ -19,6 +19,12 @@ const TITULOS: Record<Paso, string> = {
 
 const ORDEN: Paso[] = ["sentir", "pausa", "siguiente"];
 
+const MENSAJES: Record<Paso, string> = {
+  sentir: "Tómate tu tiempo. No hay respuestas correctas.",
+  pausa: "Respira a tu ritmo. Solo sigue los pasos, sin prisa.",
+  siguiente: "Lo estás haciendo bien. Elige lo que te ayude ahora.",
+};
+
 const RESPUESTAS_INICIALES: RespuestasSentir = {
   emocion: null,
   intensidad: null,
@@ -110,6 +116,7 @@ export function Recorrido() {
         </div>
 
         <div key={`${recorridoKey}-${paso}`} className="px-5 py-7 motion-safe:animate-entrada sm:px-7">
+          <p className="mb-6 text-base leading-relaxed text-tinta-suave">{MENSAJES[paso]}</p>
           {paso === "sentir" && (
             <PasoSentir
               respuestas={respuestas}

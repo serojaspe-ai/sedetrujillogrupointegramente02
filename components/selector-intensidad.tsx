@@ -54,6 +54,10 @@ export function SelectorIntensidad({ id, valor, onChange }: Props) {
           );
         })}
       </div>
+      <div className="flex justify-between text-xs text-tinta-suave">
+        <span>0 · Nada</span>
+        <span>10 · Muy intensa</span>
+      </div>
     </div>
   );
 }
