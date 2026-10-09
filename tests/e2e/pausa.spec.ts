@@ -1,0 +1,155 @@
+import { expect, test, type Page } from "@playwright/test";
+
+const SITUACIONES = [
+  { nombre: "trabajo en grupo", texto: "Sus compañeros no cumplieron su parte del trabajo" },
+  { nombre: "discusión en casa", texto: "Tuvo una discusión en casa" },
+  { nombre: "tareas acumuladas", texto: "Se le acumularon varias tareas" },
+];
+
+async function llenarPantallaSentir(
+  page: Page,
+  { emocion, intensidad, situacion, minutos }: { emocion: string; intensidad: string; situacion: string; minutos: string },
+) {
+  await page.getByRole("radio", { name: emocion, exact: true }).click();
+  await page.getByRole("radiogroup", { name: "¿Qué tan intensa es?" }).getByRole("radio", { name: intensidad, exact: true }).click();
+  await page.getByRole("radio", { name: situacion, exact: true }).click();
+  await page.getByRole("radiogroup", { name: "¿Cuánto tiempo quieres pausar?" }).getByRole("radio", { name: minutos, exact: true }).click();
+}
+
+async function encontrarPausa(page: Page) {
+  await page.getByRole("button", { name: "Encontrar mi pausa" }).click();
+  await expect(page.getByRole("heading", { name: "Mi pausa", exact: true })).toBeVisible();
+}
+
+test.describe("recorrido de pausa", () => {
+  for (const situacion of SITUACIONES) {
+    test(`completa el flujo para ${situacion.nombre}`, async ({ page }) => {
+      await page.goto("/");
+      await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
+
+      await llenarPantallaSentir(page, {
+        emocion: "Frustración",
+        intensidad: "7",
+        situacion: situacion.texto,
+        minutos: "5 min",
+      });
+      await encontrarPausa(page);
+
+      await expect(page.getByText(/Pausa adaptada con IA|Modo demo: actividad sin adaptación por IA/)).toBeVisible();
+      await expect(page.getByRole("timer", { name: "Tiempo restante" })).toHaveText("05:00");
+      await expect(page.getByRole("list")).toContainText(/\S/);
+
+      await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+      await expect(page.getByRole("heading", { name: "Mi siguiente paso", exact: true })).toBeVisible();
+
+      await page.locator("section").filter({ hasText: "¿Cómo te sientes ahora?" }).getByRole("radio", { name: "6", exact: true }).click();
+      await page.getByRole("radio", { name: "Explicar lo que necesito" }).click();
+      await page.getByRole("button", { name: "Elegir este paso" }).click();
+
+      const resumen = page.getByRole("region", { name: "Tu siguiente paso" });
+      await expect(resumen).toContainText(situacion.texto);
+      await expect(resumen).toContainText("Explicar lo que necesito");
+      await expect(resumen).toContainText("7/10 al inicio, 6/10 ahora");
+
+      await page.getByRole("button", { name: "Iniciar otro recorrido" }).click();
+      await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
+      await expect(page.getByRole("radio", { name: "Frustración", exact: true })).toHaveAttribute("aria-checked", "false");
+    });
+  }
+
+  test("valida todos los campos de la primera pantalla y conserva lo elegido", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("radio", { name: "Enojo", exact: true }).click();
+    await page.getByRole("button", { name: "Encontrar mi pausa" }).click();
+
+    await expect(page.getByText("Elige cómo te sientes.")).toHaveCount(0);
+    await expect(page.getByText("Elige qué tan intensa es la emoción.")).toBeVisible();
+    await expect(page.getByText("Elige lo que ocurrió.")).toBeVisible();
+    await expect(page.getByText("Elige cuánto tiempo quieres pausar.")).toBeVisible();
+    await expect(page.getByRole("radio", { name: "Enojo", exact: true })).toHaveAttribute("aria-checked", "true");
+  });
+
+  test("exige intensidad y paso en la tercera pantalla", async ({ page }) => {
+    await page.goto("/");
+    await llenarPantallaSentir(page, { emocion: "Inquietud", intensidad: "4", situacion: SITUACIONES[2].texto, minutos: "2 min" });
+    await encontrarPausa(page);
+    await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+
+    await page.getByRole("button", { name: "Elegir este paso" }).click();
+    await expect(page.getByText("Elige cómo te sientes ahora.")).toBeVisible();
+    await expect(page.getByText("Elige el paso que quieres dar.")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toHaveCount(0);
+  });
+
+  test("temporizador: detener, reanudar y fin del tiempo", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "8", situacion: SITUACIONES[1].texto, minutos: "2 min" });
+    await encontrarPausa(page);
+
+    const reloj = page.getByRole("timer", { name: "Tiempo restante" });
+    await expect(reloj).toHaveText("02:00");
+
+    await page.clock.runFor(10_000);
+    await expect(reloj).toHaveText("01:50");
+
+    await page.getByRole("button", { name: "Detener" }).click();
+    await page.clock.runFor(30_000);
+    await expect(reloj).toHaveText("01:50");
+
+    await page.getByRole("button", { name: "Reanudar" }).click();
+    await page.clock.runFor(20_000);
+    await expect(reloj).toHaveText("01:30");
+
+    await page.clock.runFor(90_000);
+    await expect(page.getByText("Tu tiempo terminó")).toBeVisible();
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.getByRole("heading", { name: "Mi siguiente paso", exact: true })).toBeVisible();
+  });
+
+  test("muestra apoyo profesional desde cualquier pantalla", async ({ page }) => {
+    await page.goto("/");
+    const abrir = page.getByRole("button", { name: "Quiero hablar con alguien" });
+    const dialogo = page.getByRole("dialog", { name: "Hablar con alguien" });
+
+    await abrir.click();
+    await expect(dialogo).toBeVisible();
+    await expect(dialogo).toContainText("Línea 113, opción 5");
+    await expect(dialogo.getByRole("link", { name: "Ir a Bienestar Universitario" })).toHaveAttribute(
+      "href",
+      /ucv\.edu\.pe/,
+    );
+    await page.keyboard.press("Escape");
+    await expect(dialogo).toBeHidden();
+
+    await llenarPantallaSentir(page, { emocion: "Frustración", intensidad: "5", situacion: SITUACIONES[0].texto, minutos: "2 min" });
+    await encontrarPausa(page);
+    await abrir.click();
+    await expect(dialogo).toBeVisible();
+    await page.getByRole("button", { name: "Cerrar" }).click();
+
+    await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+    await abrir.click();
+    await expect(dialogo).toBeVisible();
+  });
+
+  test("el aviso de no reemplazar la atención profesional aparece en todas las pantallas", async ({ page }) => {
+    await page.goto("/");
+    const aviso = page.getByText("Esta herramienta no reemplaza la atención profesional.", { exact: true });
+    await expect(aviso).toBeVisible();
+
+    await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "3", situacion: SITUACIONES[2].texto, minutos: "2 min" });
+    await encontrarPausa(page);
+    await expect(aviso).toBeVisible();
+
+    await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+    await expect(aviso).toBeVisible();
+  });
+
+  test("muestra enlaces oficiales de la UCV en la primera pantalla", async ({ page }) => {
+    await page.goto("/");
+    const pie = page.getByRole("navigation", { name: "Enlaces de la UCV" });
+    await expect(pie.getByRole("link", { name: "ucv.edu.pe" })).toHaveAttribute("href", "https://www.ucv.edu.pe/");
+    await expect(pie.getByRole("link", { name: "Facebook" })).toHaveAttribute("href", "https://web.facebook.com/UCV.Peru");
+  });
+});

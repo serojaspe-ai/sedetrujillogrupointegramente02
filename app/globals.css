@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pausa: #2748d6;
+  --color-pausa-oscuro: #1d37a8;
+  --color-pausa-suave: #eff3ff;
+  --color-tinta: #15203b;
+  --color-tinta-suave: #5a6478;
+  --color-linea: #d5dcf2;
+  --color-exito: #17765e;
+  --color-alerta: #b42318;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-tinta);
+}
