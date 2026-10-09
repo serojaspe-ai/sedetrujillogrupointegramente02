@@ -71,7 +71,7 @@ export function Recorrido() {
     <main className="flex min-h-screen flex-col items-center gap-6 bg-white px-4 py-8 sm:py-12">
       <header className="flex w-full max-w-xl flex-col gap-1">
         <h1 className="text-3xl font-bold text-tinta">Pausa UCV</h1>
-        <p className="text-base text-tinta-suave">Una pausa antes de responder</p>
+        <p className="text-base text-tinta-suave">Una pausa antes de responder.</p>
       </header>
 
       <section
