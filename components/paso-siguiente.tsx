@@ -124,10 +124,10 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
       {confirmado ? (
         <section
           aria-labelledby="titulo-resumen"
-          className="flex flex-col gap-4 rounded-2xl border border-exito/30 bg-white p-5 shadow-sm motion-safe:animate-entrada"
+          className="flex flex-col gap-4 rounded-2xl border-2 border-turquesa-viva bg-white p-5 shadow-lg shadow-turquesa-viva/25 motion-safe:animate-entrada"
         >
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E3F6F3]">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-turquesa-suave to-turquesa-viva">
               <svg
                 viewBox="0 0 24 24"
                 className="h-7 w-7 text-exito"

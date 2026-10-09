@@ -14,6 +14,12 @@ type Props = {
 const RADIO = 52;
 const CIRCUNFERENCIA = 2 * Math.PI * RADIO;
 const ICONOS_PASO = [Eye, Wind, MessageCircle, PenLine];
+const COLORES_PASO = [
+  "bg-rosa-suave text-[#be185d]",
+  "bg-celeste-suave text-[#0369a1]",
+  "bg-turquesa-suave text-[#0f766e]",
+  "bg-pausa-suave text-pausa",
+];
 
 export function PasoPausa({ pausa, onSiguiente }: Props) {
   const totalMs = pausa.actividad.minutos * 60_000;
@@ -24,7 +30,7 @@ export function PasoPausa({ pausa, onSiguiente }: Props) {
     <div className="flex flex-col items-center gap-7 text-center motion-safe:animate-entrada">
       <p
         className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
-          pausa.origen === "ia" ? "bg-pausa-suave text-pausa" : "bg-amber-50 text-amber-800"
+          pausa.origen === "ia" ? "bg-celeste-suave text-[#0369a1]" : "bg-amber-50 text-amber-800"
         }`}
       >
         {pausa.origen === "ia" ? "Pausa adaptada con IA" : "Modo demo: actividad sin adaptación por IA"}
@@ -53,7 +59,8 @@ export function PasoPausa({ pausa, onSiguiente }: Props) {
             <defs>
               <linearGradient id="gradiente-progreso" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor="#2748d6" />
-                <stop offset="100%" stopColor="#3fb8a6" />
+                <stop offset="55%" stopColor="#0ea5e9" />
+                <stop offset="100%" stopColor="#2dd4bf" />
               </linearGradient>
             </defs>
             <circle cx="60" cy="60" r={RADIO} fill="#ffffff" stroke="#eaf4fc" strokeWidth="8" />
@@ -92,7 +99,9 @@ export function PasoPausa({ pausa, onSiguiente }: Props) {
               className="flex items-start gap-4 rounded-2xl border border-linea bg-white p-4 leading-relaxed shadow-sm motion-safe:animate-entrada"
               style={{ animationDelay: `${150 + indice * 110}ms` }}
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pausa-suave text-pausa">
+              <span
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${COLORES_PASO[indice % COLORES_PASO.length]}`}
+              >
                 <Icono aria-hidden="true" size={20} />
               </span>
               <span className="pt-1.5 text-base">{paso}</span>

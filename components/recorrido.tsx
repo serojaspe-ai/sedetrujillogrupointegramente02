@@ -72,9 +72,9 @@ export function Recorrido() {
   return (
     <main className="relative flex min-h-screen flex-col items-center gap-6 px-4 py-8 sm:py-12">
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-24 top-16 h-72 w-72 rounded-full bg-[#FBE7EF] opacity-70 blur-3xl motion-safe:animate-flotar" />
-        <div className="absolute -right-28 top-1/3 h-80 w-80 rounded-full bg-[#EAF4FC] opacity-90 blur-3xl motion-safe:animate-flotar-lento" />
-        <div className="absolute -bottom-24 left-1/4 h-72 w-72 rounded-full bg-[#E3F6F3] opacity-80 blur-3xl motion-safe:animate-flotar" />
+        <div className="absolute -left-24 top-16 h-80 w-80 rounded-full bg-rosa-viva/35 blur-3xl motion-safe:animate-flotar" />
+        <div className="absolute -right-28 top-1/3 h-96 w-96 rounded-full bg-celeste-viva/35 blur-3xl motion-safe:animate-flotar-lento" />
+        <div className="absolute -bottom-24 left-1/4 h-80 w-80 rounded-full bg-turquesa-viva/35 blur-3xl motion-safe:animate-flotar" />
       </div>
 
       <header className="flex w-full max-w-xl items-center gap-4">
@@ -91,7 +91,7 @@ export function Recorrido() {
         aria-label="Recorrido de pausa"
         className="w-full max-w-xl overflow-hidden rounded-3xl border border-white bg-white shadow-[0_20px_50px_-24px_rgba(39,72,214,0.35)]"
       >
-        <div className="bg-gradient-to-r from-[#FBE7EF] via-[#EAF4FC] to-[#E3F6F3] px-5 pb-4 pt-5">
+        <div className="bg-gradient-to-r from-rosa-suave via-celeste-suave to-turquesa-suave px-5 pb-4 pt-5">
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-pausa text-base font-bold text-white shadow-md shadow-pausa/25">
               {indice + 1}

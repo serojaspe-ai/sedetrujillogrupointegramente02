@@ -6,6 +6,12 @@ type Props = {
   onChange: (valor: number) => void;
 };
 
+function colorNivel(n: number): string {
+  if (n <= 3) return "bg-teal-600";
+  if (n <= 6) return "bg-sky-600";
+  return "bg-pink-600";
+}
+
 export function SelectorIntensidad({ id, valor, onChange }: Props) {
   return (
     <div className="flex flex-col gap-3">
@@ -39,7 +45,7 @@ export function SelectorIntensidad({ id, valor, onChange }: Props) {
               onClick={() => onChange(n)}
               className={`h-11 rounded-lg border text-sm font-semibold transition-all duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 ${
                 lleno
-                  ? "border-transparent bg-pausa text-white shadow-sm shadow-pausa/25"
+                  ? `border-transparent text-white shadow-sm ${colorNivel(n)}`
                   : "border-linea bg-white text-tinta hover:border-pausa"
               } ${activo ? "ring-2 ring-pausa/35 ring-offset-2" : ""}`}
             >

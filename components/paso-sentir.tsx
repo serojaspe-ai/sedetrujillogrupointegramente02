@@ -35,10 +35,34 @@ type Props = {
   onEncontrar: (solicitud: SolicitudPausa) => void;
 };
 
-const EMOCION_VISUAL: Record<Emocion, { Icono: typeof Frown; fondo: string; tinta: string }> = {
-  frustracion: { Icono: Frown, fondo: "bg-[#FBE7EF]", tinta: "text-[#B5487F]" },
-  enojo: { Icono: Angry, fondo: "bg-[#F8D3E2]", tinta: "text-[#9C2F66]" },
-  inquietud: { Icono: Meh, fondo: "bg-[#E3F6F3]", tinta: "text-[#1F7A6D]" },
+const EMOCION_VISUAL: Record<
+  Emocion,
+  { Icono: typeof Frown; fondo: string; tinta: string; borde: string; bordeSuave: string; sombra: string }
+> = {
+  frustracion: {
+    Icono: Frown,
+    fondo: "bg-gradient-to-br from-rosa-suave to-rosa-viva",
+    tinta: "text-[#9d174d]",
+    borde: "border-rosa-viva",
+    bordeSuave: "border-rosa-viva/35",
+    sombra: "shadow-[0_14px_30px_-12px_rgba(244,114,182,0.85)]",
+  },
+  enojo: {
+    Icono: Angry,
+    fondo: "bg-gradient-to-br from-[#ffe4ea] to-[#fb7185]",
+    tinta: "text-[#9f1239]",
+    borde: "border-[#fb7185]",
+    bordeSuave: "border-[#fb7185]/35",
+    sombra: "shadow-[0_14px_30px_-12px_rgba(251,113,133,0.85)]",
+  },
+  inquietud: {
+    Icono: Meh,
+    fondo: "bg-gradient-to-br from-turquesa-suave to-turquesa-viva",
+    tinta: "text-[#115e59]",
+    borde: "border-turquesa-viva",
+    bordeSuave: "border-turquesa-viva/35",
+    sombra: "shadow-[0_14px_30px_-12px_rgba(45,212,191,0.85)]",
+  },
 };
 
 export function validarRespuestas(
@@ -90,7 +114,7 @@ export function PasoSentir({
       <Bloque id="pregunta-emocion" titulo="¿Qué estás sintiendo?" error={errores.emocion}>
         <div role="radiogroup" aria-labelledby="pregunta-emocion" className="grid grid-cols-3 gap-3">
           {(Object.keys(EMOCIONES) as Emocion[]).map((id) => {
-            const { Icono, fondo, tinta } = EMOCION_VISUAL[id];
+            const { Icono, fondo, tinta, borde, bordeSuave, sombra } = EMOCION_VISUAL[id];
             const activo = respuestas.emocion === id;
             return (
               <button
@@ -99,16 +123,16 @@ export function PasoSentir({
                 role="radio"
                 aria-checked={activo}
                 onClick={() => cambiar({ emocion: id })}
-                className={`${TARJETA_BASE} relative flex flex-col items-center gap-2 rounded-2xl border bg-white px-2 py-4 text-center text-sm ${
-                  activo ? `${TARJETA_ACTIVA} motion-safe:animate-pop` : "border-linea"
+                className={`${TARJETA_BASE} group relative flex flex-col items-center gap-2 rounded-2xl border-2 bg-white px-2 py-4 text-center text-sm motion-safe:hover:-translate-y-1 ${
+                  activo ? `${borde} ${sombra} motion-safe:animate-pop` : bordeSuave
                 }`}
               >
                 <span
-                  className={`flex h-14 w-14 items-center justify-center rounded-full transition-transform duration-300 ${fondo} ${tinta} ${
+                  className={`flex h-16 w-16 items-center justify-center rounded-full shadow-inner transition-transform duration-300 motion-safe:group-hover:scale-105 ${fondo} ${tinta} ${
                     activo ? "scale-110" : ""
                   }`}
                 >
-                  <Icono aria-hidden="true" size={30} strokeWidth={2} />
+                  <Icono aria-hidden="true" size={32} strokeWidth={2.2} />
                 </span>
                 <span className={activo ? "font-semibold text-pausa" : "text-tinta"}>{EMOCIONES[id]}</span>
                 {activo && (
@@ -198,7 +222,7 @@ export function PasoSentir({
                 onClick={() => cambiar({ minutos })}
                 className={`${BASE_BOTON} h-12 rounded-xl border text-base font-semibold ${
                   activo
-                    ? "border-pausa bg-pausa text-white shadow-md shadow-pausa/25"
+                    ? "border-pausa bg-gradient-to-r from-pausa to-[#1e9be8] text-white shadow-lg shadow-pausa/30"
                     : "border-linea bg-white text-pausa hover:border-pausa hover:shadow-sm"
                 }`}
               >

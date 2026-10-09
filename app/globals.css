@@ -11,6 +11,13 @@
   --color-alerta: #b42318;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
+  --color-rosa-viva: #f472b6;
+  --color-celeste-viva: #38bdf8;
+  --color-turquesa-viva: #2dd4bf;
+  --color-rosa-suave: #fce7f3;
+  --color-celeste-suave: #e0f2fe;
+  --color-turquesa-suave: #ccfbf1;
+
   --animate-entrada: entrada 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-pop: pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-flotar: flotar 16s ease-in-out infinite;
@@ -50,17 +57,17 @@
 }
 
 html {
-  background-color: #eaf4fc;
+  background-color: #d6ecfd;
 }
 
 body {
   color: var(--color-tinta);
-  background-color: #eaf4fc;
+  background-color: #d6ecfd;
   background-image:
-    radial-gradient(ellipse 75% 55% at 0% 0%, rgb(251 231 239 / 0.9), transparent 70%),
-    radial-gradient(ellipse 65% 50% at 100% 35%, rgb(234 244 252 / 0.9), transparent 70%),
-    radial-gradient(ellipse 80% 60% at 30% 100%, rgb(227 246 243 / 0.95), transparent 70%),
-    linear-gradient(165deg, #fbe7ef 0%, #eaf4fc 50%, #e3f6f3 100%);
+    radial-gradient(ellipse 75% 55% at 0% 0%, rgb(249 196 220 / 0.95), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 100% 35%, rgb(160 220 252 / 0.9), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 30% 100%, rgb(150 236 223 / 0.95), transparent 70%),
+    linear-gradient(165deg, #fbd0e4 0%, #d3eafc 50%, #bdf0e6 100%);
   background-repeat: no-repeat;
   background-size: cover;
 }
