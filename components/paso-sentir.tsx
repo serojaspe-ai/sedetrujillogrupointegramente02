@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Angry, Frown, Meh } from "lucide-react";
 import {
+  DESCRIPCION_MAX_CARACTERES,
   EMOCIONES,
   ENLACES,
+  SITUACION_OTROS,
   SITUACIONES,
   TIEMPO_OPCIONES,
   type Emocion,
@@ -18,6 +20,7 @@ export type RespuestasSentir = {
   emocion: Emocion | null;
   intensidad: number | null;
   situacion: Situacion | null;
+  descripcion: string;
   minutos: Minutos | null;
 };
 
@@ -42,7 +45,9 @@ export function validarRespuestas(
 ): { ok: true; solicitud: SolicitudPausa } | { ok: false; errores: Errores } {
   const { emocion, intensidad, situacion, minutos } = respuestas;
   if (emocion && intensidad !== null && situacion && minutos) {
-    return { ok: true, solicitud: { emocion, intensidad, situacion, minutos } };
+    const descripcion =
+      situacion === SITUACION_OTROS ? respuestas.descripcion.trim() || undefined : undefined;
+    return { ok: true, solicitud: { emocion, intensidad, situacion, minutos, descripcion } };
   }
   return {
     ok: false,
@@ -139,6 +144,27 @@ export function PasoSentir({
             );
           })}
         </div>
+        {respuestas.situacion === SITUACION_OTROS && (
+          <div className="flex flex-col gap-2">
+            <label htmlFor="descripcion-otros" className="text-sm font-medium text-tinta">
+              Si quieres, cuéntanos un poco más
+            </label>
+            <textarea
+              id="descripcion-otros"
+              rows={3}
+              maxLength={DESCRIPCION_MAX_CARACTERES}
+              value={respuestas.descripcion}
+              onChange={(evento) => cambiar({ descripcion: evento.target.value })}
+              className="rounded-xl border border-linea bg-white px-4 py-3 text-base focus:border-pausa focus:outline-none"
+            />
+            <p className="text-xs text-tinta-suave">
+              Para esta demostración, usa una situación ficticia y evita datos personales.
+            </p>
+            <p className="self-end text-xs text-tinta-suave">
+              {respuestas.descripcion.length}/{DESCRIPCION_MAX_CARACTERES}
+            </p>
+          </div>
+        )}
       </Bloque>
 
       <Bloque id="pregunta-tiempo" titulo="¿Cuánto tiempo quieres pausar?" error={errores.minutos}>

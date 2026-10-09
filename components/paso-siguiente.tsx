@@ -6,6 +6,7 @@ import {
   EMOCIONES,
   PASO_SIGUIENTE_IDS,
   PASOS_SIGUIENTES,
+  SITUACION_OTROS,
   SITUACIONES,
   type PasoSiguienteId,
 } from "@/lib/catalogo";
@@ -114,7 +115,11 @@ export function PasoSiguiente({ respuestas, onReiniciar }: Props) {
             </dd>
             <dt className="text-tinta-suave">Situación</dt>
             <dd className="font-medium">
-              {respuestas.situacion ? SITUACIONES[respuestas.situacion] : "—"}
+              {respuestas.situacion === SITUACION_OTROS && respuestas.descripcion.trim()
+                ? respuestas.descripcion.trim()
+                : respuestas.situacion
+                  ? SITUACIONES[respuestas.situacion]
+                  : "—"}
             </dd>
             <dt className="text-tinta-suave">Paso elegido</dt>
             <dd className="font-medium">{pasoElegido ? PASOS_SIGUIENTES[pasoElegido] : "—"}</dd>

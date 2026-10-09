@@ -1,11 +1,16 @@
 import { z } from "zod";
-import { EMOCION_IDS, SITUACION_IDS } from "./catalogo";
+import {
+  DESCRIPCION_MAX_CARACTERES,
+  EMOCION_IDS,
+  SITUACION_IDS,
+} from "./catalogo";
 
 export const solicitudPausaSchema = z.object({
   emocion: z.enum(EMOCION_IDS),
   minutos: z.union([z.literal(2), z.literal(5), z.literal(10)]),
   intensidad: z.number().int().min(0).max(10),
   situacion: z.enum(SITUACION_IDS),
+  descripcion: z.string().max(DESCRIPCION_MAX_CARACTERES).optional(),
 });
 
 export type SolicitudPausa = z.infer<typeof solicitudPausaSchema>;

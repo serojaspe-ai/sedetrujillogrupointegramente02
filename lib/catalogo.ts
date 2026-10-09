@@ -14,14 +14,21 @@ export const SITUACION_IDS = [
   "trabajo-grupo",
   "discusion-casa",
   "tareas-acumuladas",
+  "no-salio-esperado",
+  "otros",
 ] as const;
 export type Situacion = (typeof SITUACION_IDS)[number];
 
 export const SITUACIONES: Record<Situacion, string> = {
-  "trabajo-grupo": "Sus compañeros no cumplieron su parte del trabajo",
-  "discusion-casa": "Tuvo una discusión en casa",
-  "tareas-acumuladas": "Se le acumularon varias tareas",
+  "trabajo-grupo": "Mis compañeros no cumplieron su parte del trabajo.",
+  "discusion-casa": "Tuve una discusión en casa.",
+  "tareas-acumuladas": "Se me acumularon varias tareas.",
+  "no-salio-esperado": "Algo no salió como esperaba.",
+  otros: "Otros.",
 };
+
+export const SITUACION_OTROS: Situacion = "otros";
+export const DESCRIPCION_MAX_CARACTERES = 200;
 
 export const PASO_SIGUIENTE_IDS = ["esperar", "explicar", "apoyo"] as const;
 export type PasoSiguienteId = (typeof PASO_SIGUIENTE_IDS)[number];

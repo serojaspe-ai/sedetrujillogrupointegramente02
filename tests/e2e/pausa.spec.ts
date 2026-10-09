@@ -1,9 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const SITUACIONES = [
-  { nombre: "trabajo en grupo", texto: "Sus compañeros no cumplieron su parte del trabajo" },
-  { nombre: "discusión en casa", texto: "Tuvo una discusión en casa" },
-  { nombre: "tareas acumuladas", texto: "Se le acumularon varias tareas" },
+  { nombre: "trabajo en grupo", texto: "Mis compañeros no cumplieron su parte del trabajo." },
+  { nombre: "discusión en casa", texto: "Tuve una discusión en casa." },
+  { nombre: "tareas acumuladas", texto: "Se me acumularon varias tareas." },
 ];
 
 async function llenarPantallaSentir(
@@ -144,6 +144,48 @@ test.describe("recorrido de pausa", () => {
 
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
     await expect(aviso).toBeVisible();
+  });
+
+  test("ofrece las cinco situaciones y permite continuar con Otros sin descripción", async ({ page }) => {
+    await page.goto("/");
+    const grupo = page.getByRole("radiogroup", { name: "¿Qué ocurrió?" });
+    await expect(grupo.getByRole("radio")).toHaveCount(5);
+    await expect(page.getByLabel("Si quieres, cuéntanos un poco más")).toHaveCount(0);
+
+    await grupo.getByRole("radio", { name: "Otros.", exact: true }).click();
+    await expect(page.getByLabel("Si quieres, cuéntanos un poco más")).toBeVisible();
+    await expect(
+      page.getByText("Para esta demostración, usa una situación ficticia y evita datos personales."),
+    ).toBeVisible();
+
+    await llenarPantallaSentir(page, { emocion: "Inquietud", intensidad: "4", situacion: "Otros.", minutos: "2 min" });
+    await encontrarPausa(page);
+    await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+    await page.locator("section").filter({ hasText: "¿Cómo te sientes ahora?" }).getByRole("radio", { name: "3", exact: true }).click();
+    await page.getByRole("radio", { name: "Pedir apoyo" }).click();
+    await page.getByRole("button", { name: "Elegir este paso" }).click();
+    await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toContainText("Otros.");
+  });
+
+  test("la descripción de Otros tiene límite de 200 caracteres y aparece en el resumen", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("radio", { name: "Enojo", exact: true }).click();
+    await page.getByRole("radiogroup", { name: "¿Qué tan intensa es?" }).getByRole("radio", { name: "6", exact: true }).click();
+    await page.getByRole("radio", { name: "Otros.", exact: true }).click();
+    await page.getByRole("radiogroup", { name: "¿Cuánto tiempo quieres pausar?" }).getByRole("radio", { name: "2 min" }).click();
+
+    const campo = page.getByLabel("Si quieres, cuéntanos un poco más");
+    await campo.fill("a".repeat(250));
+    await expect(campo).toHaveValue("a".repeat(200));
+    await expect(page.getByText("200/200")).toBeVisible();
+
+    await campo.fill("Tuve un malentendido con una profesora.");
+    await encontrarPausa(page);
+    await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+    await page.locator("section").filter({ hasText: "¿Cómo te sientes ahora?" }).getByRole("radio", { name: "5", exact: true }).click();
+    await page.getByRole("radio", { name: "Esperar antes de responder" }).click();
+    await page.getByRole("button", { name: "Elegir este paso" }).click();
+    await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toContainText("Tuve un malentendido con una profesora.");
   });
 
   test("muestra enlaces oficiales de la UCV en la primera pantalla", async ({ page }) => {

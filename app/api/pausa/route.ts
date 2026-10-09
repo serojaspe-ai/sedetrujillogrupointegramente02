@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { elegirActividad } from "@/lib/seleccion";
 import { adaptarPausa } from "@/lib/pausa-ia";
 import { solicitudPausaSchema } from "@/lib/esquemas";
+import { SITUACION_OTROS } from "@/lib/catalogo";
 
 export async function POST(request: Request) {
   const cuerpo: unknown = await request.json().catch(() => null);
@@ -13,9 +14,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const { emocion, minutos, situacion } = solicitud.data;
+  const { emocion, intensidad, minutos, situacion, descripcion } = solicitud.data;
   const actividad = elegirActividad(emocion, minutos);
-  const adaptacion = await adaptarPausa({ actividad, situacion, minutos });
+  const descripcionLimpia =
+    situacion === SITUACION_OTROS ? descripcion?.trim() || undefined : undefined;
+  const adaptacion = await adaptarPausa({
+    actividad,
+    emocion,
+    intensidad,
+    situacion,
+    descripcion: descripcionLimpia,
+    minutos,
+  });
 
   return NextResponse.json({
     actividad: { id: actividad.id, nombre: actividad.nombre, minutos },

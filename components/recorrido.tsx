@@ -22,6 +22,7 @@ const RESPUESTAS_INICIALES: RespuestasSentir = {
   emocion: null,
   intensidad: null,
   situacion: null,
+  descripcion: "",
   minutos: null,
 };
 
