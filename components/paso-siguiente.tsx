@@ -1,33 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { RotateCcw } from "lucide-react";
 import {
-  EMOCIONES,
   PASO_SIGUIENTE_IDS,
   PASOS_SIGUIENTES,
-  SITUACION_OTROS,
-  SITUACIONES,
   type PasoSiguienteId,
 } from "@/lib/catalogo";
-import { mensajeCierre } from "@/lib/cierre";
 import { BASE_BOTON, RELLENO_EXITO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
 import { MarcaSeleccion } from "./marca-seleccion";
-import type { RespuestasSentir } from "./paso-sentir";
 import { SelectorIntensidad } from "./selector-intensidad";
 
-type Props = {
-  respuestas: RespuestasSentir;
-  registroId: string | null;
-  onReiniciar: () => void;
+export type ResultadoPausa = {
+  intensidadFinal: number;
+  accionElegida: PasoSiguienteId;
 };
 
-export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
+type Props = {
+  registroId: string | null;
+  onFinalizar: (resultado: ResultadoPausa) => void;
+};
+
+export function PasoSiguiente({ registroId, onFinalizar }: Props) {
   const [guardando, setGuardando] = useState(false);
   const [errorGuardado, setErrorGuardado] = useState<string | null>(null);
   const [intensidadAhora, setIntensidadAhora] = useState<number | null>(null);
   const [pasoElegido, setPasoElegido] = useState<PasoSiguienteId | null>(null);
-  const [confirmado, setConfirmado] = useState(false);
   const [errores, setErrores] = useState<{ intensidad?: string; paso?: string }>({});
 
   async function confirmar() {
@@ -55,15 +52,8 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
       }
       setGuardando(false);
     }
-    setConfirmado(true);
+    onFinalizar({ intensidadFinal: intensidadAhora, accionElegida: pasoElegido });
   }
-
-  const situacionTexto =
-    respuestas.situacion === SITUACION_OTROS && respuestas.descripcion.trim()
-      ? respuestas.descripcion.trim()
-      : respuestas.situacion
-        ? SITUACIONES[respuestas.situacion]
-        : "—";
 
   return (
     <div className="flex flex-col gap-8">
@@ -99,12 +89,11 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
                 type="button"
                 role="radio"
                 aria-checked={activo}
-                disabled={confirmado}
                 onClick={() => {
                   setPasoElegido(id);
                   setErrores((previo) => ({ ...previo, paso: undefined }));
                 }}
-                className={`${TARJETA_BASE} flex min-h-14 items-center gap-3 rounded-2xl border bg-white px-4 text-left text-base disabled:cursor-default ${
+                className={`${TARJETA_BASE} flex min-h-14 items-center gap-3 rounded-2xl border bg-white px-4 text-left text-base ${
                   activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
@@ -121,82 +110,19 @@ export function PasoSiguiente({ respuestas, registroId, onReiniciar }: Props) {
         )}
       </section>
 
-      {confirmado ? (
-        <section
-          aria-labelledby="titulo-resumen"
-          className="flex flex-col gap-4 rounded-2xl border-2 border-turquesa-viva bg-white p-5 shadow-lg shadow-turquesa-viva/25 motion-safe:animate-entrada"
-        >
-          <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-turquesa-suave to-turquesa-viva">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-7 w-7 text-exito"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path
-                  d="M5 12.5l4.5 4.5L19 7"
-                  pathLength={1}
-                  strokeDasharray={1}
-                  strokeDashoffset={0}
-                  className="motion-safe:animate-trazar"
-                />
-              </svg>
-            </span>
-            <h2 id="titulo-resumen" className="text-lg font-semibold text-exito">
-              Tu siguiente paso está listo
-            </h2>
-          </div>
-
-          {respuestas.intensidad !== null && intensidadAhora !== null && (
-            <p className="rounded-xl bg-celeste-suave p-4 text-base leading-relaxed text-tinta">
-              {mensajeCierre(respuestas.intensidad, intensidadAhora)}
-            </p>
-          )}
-
-          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-base">
-            <dt className="text-tinta-suave">Emoción</dt>
-            <dd className="font-medium">{respuestas.emocion ? EMOCIONES[respuestas.emocion] : "—"}</dd>
-            <dt className="text-tinta-suave">Intensidad inicial</dt>
-            <dd className="font-medium">{respuestas.intensidad ?? "—"}/10</dd>
-            <dt className="text-tinta-suave">Intensidad final</dt>
-            <dd className="font-medium">{intensidadAhora ?? "—"}/10</dd>
-            <dt className="text-tinta-suave">Situación</dt>
-            <dd className="font-medium">{situacionTexto}</dd>
-            <dt className="text-tinta-suave">Siguiente acción</dt>
-            <dd className="font-medium">{pasoElegido ? PASOS_SIGUIENTES[pasoElegido] : "—"}</dd>
-          </dl>
-
-          <button
-            type="button"
-            onClick={onReiniciar}
-            className={`${BASE_BOTON} inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-pausa bg-white font-semibold text-pausa hover:bg-pausa-suave`}
-          >
-            <RotateCcw aria-hidden="true" size={18} />
-            Iniciar otro recorrido
-          </button>
-        </section>
-      ) : (
-        <>
-          {errorGuardado && (
-            <p role="alert" className="text-sm font-medium text-alerta">
-              {errorGuardado}
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={confirmar}
-            disabled={guardando}
-            className={`${BASE_BOTON} ${RELLENO_EXITO} h-14 text-lg font-semibold`}
-          >
-            {guardando ? "Guardando…" : "Elegir este paso"}
-          </button>
-        </>
+      {errorGuardado && (
+        <p role="alert" className="text-sm font-medium text-alerta">
+          {errorGuardado}
+        </p>
       )}
+      <button
+        type="button"
+        onClick={confirmar}
+        disabled={guardando}
+        className={`${BASE_BOTON} ${RELLENO_EXITO} h-14 text-lg font-semibold`}
+      >
+        {guardando ? "Guardando…" : "Elegir este paso"}
+      </button>
     </div>
   );
 }

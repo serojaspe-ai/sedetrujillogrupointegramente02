@@ -6,15 +6,17 @@ import type { RespuestaPausa, SolicitudPausa } from "@/lib/esquemas";
 import { respuestaPausaSchema } from "@/lib/esquemas";
 import { ContactoProfesional } from "./contacto-profesional";
 import { PasoPausa } from "./paso-pausa";
+import { PasoResultado } from "./paso-resultado";
 import { PasoSentir, type RespuestasSentir } from "./paso-sentir";
-import { PasoSiguiente } from "./paso-siguiente";
+import { PasoSiguiente, type ResultadoPausa } from "./paso-siguiente";
 
-type Paso = "sentir" | "pausa" | "siguiente";
+type Paso = "sentir" | "pausa" | "siguiente" | "resultado";
 
 const TITULOS: Record<Paso, string> = {
   sentir: "Cómo me siento",
   pausa: "Mi pausa",
   siguiente: "Mi siguiente paso",
+  resultado: "Mi resultado",
 };
 
 const ORDEN: Paso[] = ["sentir", "pausa", "siguiente"];
@@ -23,6 +25,7 @@ const MENSAJES: Record<Paso, string> = {
   sentir: "Tómate tu tiempo. No hay respuestas correctas.",
   pausa: "Respira a tu ritmo. Solo sigue los pasos, sin prisa.",
   siguiente: "Lo estás haciendo bien. Elige lo que te ayude ahora.",
+  resultado: "Gracias por acompañarte en esta pausa.",
 };
 
 const RESPUESTAS_INICIALES: RespuestasSentir = {
@@ -37,6 +40,7 @@ export function Recorrido() {
   const [paso, setPaso] = useState<Paso>("sentir");
   const [respuestas, setRespuestas] = useState<RespuestasSentir>(RESPUESTAS_INICIALES);
   const [pausa, setPausa] = useState<RespuestaPausa | null>(null);
+  const [resultado, setResultado] = useState<ResultadoPausa | null>(null);
   const [cargando, setCargando] = useState(false);
   const [errorServidor, setErrorServidor] = useState<string | null>(null);
   const [recorridoKey, setRecorridoKey] = useState(0);
@@ -68,12 +72,13 @@ export function Recorrido() {
   function reiniciar() {
     setRespuestas(RESPUESTAS_INICIALES);
     setPausa(null);
+    setResultado(null);
     setErrorServidor(null);
     setPaso("sentir");
     setRecorridoKey((k) => k + 1);
   }
 
-  const indice = ORDEN.indexOf(paso);
+  const indice = paso === "resultado" ? ORDEN.length - 1 : ORDEN.indexOf(paso);
 
   return (
     <main className="relative flex min-h-screen flex-col items-center gap-6 px-4 py-8 sm:py-12">
@@ -131,10 +136,15 @@ export function Recorrido() {
           )}
           {paso === "siguiente" && (
             <PasoSiguiente
-              respuestas={respuestas}
               registroId={pausa?.registroId ?? null}
-              onReiniciar={reiniciar}
+              onFinalizar={(datos) => {
+                setResultado(datos);
+                setPaso("resultado");
+              }}
             />
+          )}
+          {paso === "resultado" && resultado && (
+            <PasoResultado respuestas={respuestas} resultado={resultado} onReiniciar={reiniciar} />
           )}
         </div>
 
