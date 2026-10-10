@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pausa UCV",
+  title: "Respira +",
   description: "Una pausa antes de responder, para estudiantes de la UCV.",
 };
 

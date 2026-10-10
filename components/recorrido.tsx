@@ -93,7 +93,7 @@ export function Recorrido() {
           <Leaf aria-hidden="true" size={24} />
         </span>
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold text-tinta">Pausa UCV</h1>
+          <h1 className="text-3xl font-bold text-tinta">Respira +</h1>
           <p className="text-base text-tinta-suave">Una pausa antes de responder.</p>
         </div>
       </header>
