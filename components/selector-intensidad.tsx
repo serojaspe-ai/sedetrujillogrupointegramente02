@@ -4,6 +4,7 @@ type Props = {
   id: string;
   valor: number | null;
   onChange: (valor: number) => void;
+  extremos?: [string, string];
 };
 
 function colorNivel(n: number): string {
@@ -12,7 +13,7 @@ function colorNivel(n: number): string {
   return "bg-pink-600";
 }
 
-export function SelectorIntensidad({ id, valor, onChange }: Props) {
+export function SelectorIntensidad({ id, valor, onChange, extremos }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-end justify-between">
@@ -55,8 +56,8 @@ export function SelectorIntensidad({ id, valor, onChange }: Props) {
         })}
       </div>
       <div className="flex justify-between text-xs text-tinta-suave">
-        <span>0 · Nada</span>
-        <span>10 · Muy intensa</span>
+        <span>{extremos?.[0] ?? "0 · Nada"}</span>
+        <span>{extremos?.[1] ?? "10 · Muy intensa"}</span>
       </div>
     </div>
   );

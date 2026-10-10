@@ -25,7 +25,7 @@ const ORDEN: Paso[] = ["sentir", "pausa", "siguiente"];
 const MENSAJES: Record<Paso, string> = {
   sentir: "Tómate tu tiempo. No hay respuestas correctas.",
   pausa: "Respira a tu ritmo. Solo sigue los pasos, sin prisa.",
-  siguiente: "Lo estás haciendo bien. Elige lo que te ayude ahora.",
+  siguiente: "Date un momento para reconocer cómo te sientes y elegir qué hacer después.",
   resultado: "Gracias por acompañarte en esta pausa.",
 };
 
@@ -142,6 +142,7 @@ export function Recorrido() {
           )}
           {paso === "siguiente" && (
             <PasoSiguiente
+              emocion={respuestas.emocion}
               registroId={pausa?.registroId ?? null}
               onFinalizar={(datos) => {
                 setResultado(datos);

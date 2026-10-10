@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import {
+  DESCRIPCION_PASOS_SIGUIENTES,
+  EMOCIONES,
   PASO_SIGUIENTE_IDS,
   PASOS_SIGUIENTES,
+  type Emocion,
   type PasoSiguienteId,
 } from "@/lib/catalogo";
 import { BASE_BOTON, RELLENO_EXITO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
@@ -16,11 +19,12 @@ export type ResultadoPausa = {
 };
 
 type Props = {
+  emocion: Emocion | null;
   registroId: string | null;
   onFinalizar: (resultado: ResultadoPausa) => void;
 };
 
-export function PasoSiguiente({ registroId, onFinalizar }: Props) {
+export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
   const [guardando, setGuardando] = useState(false);
   const [errorGuardado, setErrorGuardado] = useState<string | null>(null);
   const [intensidadAhora, setIntensidadAhora] = useState<number | null>(null);
@@ -29,8 +33,8 @@ export function PasoSiguiente({ registroId, onFinalizar }: Props) {
 
   async function confirmar() {
     const nuevosErrores = {
-      intensidad: intensidadAhora === null ? "Elige cómo te sientes ahora." : undefined,
-      paso: pasoElegido === null ? "Elige el paso que quieres dar." : undefined,
+      intensidad: intensidadAhora === null ? "Elige qué tan fuerte la sientes ahora." : undefined,
+      paso: pasoElegido === null ? "Elige el pequeño paso que quieres dar." : undefined,
     };
     setErrores(nuevosErrores);
     if (intensidadAhora === null || pasoElegido === null) return;
@@ -59,11 +63,18 @@ export function PasoSiguiente({ registroId, onFinalizar }: Props) {
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-3">
         <h2 id="pregunta-ahora" className="text-lg font-semibold">
-          ¿Cómo te sientes ahora?
+          ¿Qué tan fuerte sientes esa emoción ahora?
         </h2>
+        {emocion && (
+          <p className="text-sm font-medium text-pausa">Emoción elegida al inicio: {EMOCIONES[emocion]}</p>
+        )}
+        <p className="text-base leading-relaxed text-tinta-suave">
+          Marca del 0 al 10 cuánto la sientes en este momento. No hay una respuesta correcta.
+        </p>
         <SelectorIntensidad
           id="pregunta-ahora"
           valor={intensidadAhora}
+          extremos={["0: No la siento", "10: La siento muy fuerte"]}
           onChange={(valor) => {
             setIntensidadAhora(valor);
             setErrores((previo) => ({ ...previo, intensidad: undefined }));
@@ -78,7 +89,7 @@ export function PasoSiguiente({ registroId, onFinalizar }: Props) {
 
       <section className="flex flex-col gap-3">
         <h2 id="pregunta-paso" className="text-lg font-semibold">
-          ¿Qué quieres hacer?
+          ¿Qué pequeño paso quieres dar ahora?
         </h2>
         <div role="radiogroup" aria-labelledby="pregunta-paso" className="flex flex-col gap-3">
           {PASO_SIGUIENTE_IDS.map((id) => {
@@ -93,16 +104,26 @@ export function PasoSiguiente({ registroId, onFinalizar }: Props) {
                   setPasoElegido(id);
                   setErrores((previo) => ({ ...previo, paso: undefined }));
                 }}
-                className={`${TARJETA_BASE} flex min-h-14 items-center gap-3 rounded-2xl border bg-white px-4 text-left text-base ${
+                className={`${TARJETA_BASE} flex min-h-14 items-start gap-3 rounded-2xl border bg-white px-4 py-4 text-left text-base ${
                   activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
-                <MarcaSeleccion activo={activo} />
-                {PASOS_SIGUIENTES[id]}
+                <span className="pt-0.5">
+                  <MarcaSeleccion activo={activo} />
+                </span>
+                <span className="flex flex-col gap-1">
+                  <span className="font-semibold text-tinta">{PASOS_SIGUIENTES[id]}</span>
+                  <span className="text-sm leading-relaxed text-tinta-suave">
+                    {DESCRIPCION_PASOS_SIGUIENTES[id]}
+                  </span>
+                </span>
               </button>
             );
           })}
         </div>
+        <p className="text-sm leading-relaxed text-tinta-suave">
+          Puedes elegir lo que te sirva ahora y cambiar de idea después.
+        </p>
         {errores.paso && (
           <p role="alert" className="text-sm font-medium text-alerta">
             {errores.paso}
@@ -121,7 +142,7 @@ export function PasoSiguiente({ registroId, onFinalizar }: Props) {
         disabled={guardando}
         className={`${BASE_BOTON} ${RELLENO_EXITO} h-14 text-lg font-semibold`}
       >
-        {guardando ? "Guardando…" : "Elegir este paso"}
+        {guardando ? "Guardando…" : "Ver mi resumen"}
       </button>
     </div>
   );
