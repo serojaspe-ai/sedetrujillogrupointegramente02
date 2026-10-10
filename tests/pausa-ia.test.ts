@@ -15,7 +15,7 @@ afterEach(() => {
 
 const entrada = {
   actividad: VOLVER_AL_PRESENTE,
-  emocion: "enojo" as const,
+  emocion: "ansiedad" as const,
   intensidad: 6,
   situacion: "discusion-casa" as const,
   minutos: 5 as const,
@@ -31,7 +31,7 @@ describe("adaptarPausa", () => {
   it("no inventa la situación cuando Otros no tiene descripción", () => {
     const mensaje = construirMensajeUsuario({
       ...entrada,
-      emocion: "inquietud",
+      emocion: "tristeza",
       intensidad: 7,
       situacion: "otros",
     });
@@ -44,7 +44,7 @@ describe("adaptarPausa", () => {
   it("incluye la descripción escrita en Otros como dato entre comillas", () => {
     const mensaje = construirMensajeUsuario({
       ...entrada,
-      emocion: "enojo",
+      emocion: "ansiedad",
       intensidad: 4,
       situacion: "otros",
       descripcion: "Tuve un malentendido con una profesora.",
@@ -55,7 +55,7 @@ describe("adaptarPausa", () => {
   it("usa el texto de la opción elegida cuando no es Otros", () => {
     const mensaje = construirMensajeUsuario({
       ...entrada,
-      emocion: "frustracion",
+      emocion: "estres",
       intensidad: 6,
       situacion: "tareas-acumuladas",
     });

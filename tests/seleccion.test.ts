@@ -6,13 +6,13 @@ import { formatearTiempo, msRestantes, progreso } from "@/lib/temporizador";
 
 describe("elegirActividad", () => {
   it("usa la actividad preferida por emoción cuando el tiempo es compatible", () => {
-    expect(elegirActividad("enojo", 5).id).toBe("volver-presente");
-    expect(elegirActividad("frustracion", 2).id).toBe("antes-responder");
-    expect(elegirActividad("inquietud", 10).id).toBe("una-cosa-a-la-vez");
+    expect(elegirActividad("ansiedad", 5).id).toBe("volver-presente");
+    expect(elegirActividad("tristeza", 2).id).toBe("antes-responder");
+    expect(elegirActividad("estres", 10).id).toBe("una-cosa-a-la-vez");
   });
 
   it("vuelve a Volver al presente si la preferida no admite el tiempo", () => {
-    expect(elegirActividad("inquietud", 2).id).toBe("volver-presente");
+    expect(elegirActividad("estres", 2).id).toBe("volver-presente");
   });
 });
 

@@ -1,15 +1,15 @@
 import type { Emocion } from "@/lib/catalogo";
 
 const PALETA: Record<Emocion, { cara: string; trazo: string }> = {
-  frustracion: { cara: "#FCE7F3", trazo: "#9D174D" },
-  enojo: { cara: "#FFE4EA", trazo: "#9F1239" },
-  inquietud: { cara: "#CCFBF1", trazo: "#115E59" },
+  estres: { cara: "#E0F2FE", trazo: "#0369A1" },
+  ansiedad: { cara: "#CCFBF1", trazo: "#115E59" },
+  tristeza: { cara: "#FCE7F3", trazo: "#9D174D" },
 };
 
 export const REACCION_EMOCION: Record<Emocion, string> = {
-  frustracion: "motion-safe:animate-sacudir",
-  enojo: "motion-safe:animate-pop",
-  inquietud: "motion-safe:animate-vibrar",
+  estres: "motion-safe:animate-sacudir",
+  ansiedad: "motion-safe:animate-vibrar",
+  tristeza: "motion-safe:animate-respirar",
 };
 
 export function IlustracionEmocion({
@@ -34,33 +34,34 @@ export function IlustracionEmocion({
       className={`${className} ${reaccion ? REACCION_EMOCION[emocion] : ""}`}
     >
       <circle cx="32" cy="32" r="29" fill={cara} stroke="none" />
-      {emocion === "frustracion" && (
+      {emocion === "estres" && (
         <>
-          <path d="M16 22 L28 28" />
-          <path d="M48 22 L36 28" />
-          <circle cx="23" cy="36" r="2.6" fill={trazo} stroke="none" />
-          <circle cx="41" cy="36" r="2.6" fill={trazo} stroke="none" />
-          <path d="M24 49 Q32 42 40 49" />
+          <path d="M18 22 L26 25" />
+          <path d="M46 22 L38 25" />
+          <path d="M28 14 L30 18" />
+          <path d="M36 14 L34 18" />
+          <path d="M20 35 H28" />
+          <path d="M36 35 H44" />
+          <path d="M24 46 L28 42 L32 46 L36 42 L40 46" />
         </>
       )}
-      {emocion === "enojo" && (
+      {emocion === "ansiedad" && (
         <>
-          <path d="M14 24 L28 33" />
-          <path d="M50 24 L36 33" />
-          <path d="M20 37 H28" />
-          <path d="M36 37 H44" />
-          <rect x="24" y="43" width="16" height="7" rx="2" />
-          <path d="M32 43 V50" />
-        </>
-      )}
-      {emocion === "inquietud" && (
-        <>
-          <path d="M16 24 Q21 19 27 24" />
-          <path d="M37 24 Q43 19 48 24" />
-          <circle cx="23" cy="35" r="2.6" fill={trazo} stroke="none" />
-          <circle cx="41" cy="35" r="2.6" fill={trazo} stroke="none" />
-          <path d="M22 46 Q27 42 32 46 T42 46" />
+          <path d="M16 26 L26 22" />
+          <path d="M48 26 L38 22" />
+          <circle cx="23" cy="36" r="4" />
+          <circle cx="41" cy="36" r="4" />
+          <path d="M26 47 Q32 42 38 47" />
           <path d="M54 12 Q57 17 54 20 Q51 17 54 12 Z" fill="#2DD4BF" stroke="none" />
+        </>
+      )}
+      {emocion === "tristeza" && (
+        <>
+          <path d="M16 34 Q22 29 28 34" />
+          <path d="M36 34 Q42 29 48 34" />
+          <path d="M22 52 Q32 44 42 52" />
+          <path d="M22 26 Q25 24 28 26" />
+          <path d="M24 38 Q22 42 24 44 Q26 42 24 38 Z" fill="#60A5FA" stroke="none" />
         </>
       )}
     </svg>

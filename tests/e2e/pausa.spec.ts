@@ -28,7 +28,7 @@ test.describe("recorrido de pausa", () => {
       await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
 
       await llenarPantallaSentir(page, {
-        emocion: "Frustración",
+        emocion: "Estrés",
         intensidad: "7",
         situacion: situacion.texto,
         minutos: "5 min",
@@ -55,25 +55,25 @@ test.describe("recorrido de pausa", () => {
 
       await page.getByRole("button", { name: "Iniciar otro recorrido" }).click();
       await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
-      await expect(page.getByRole("radio", { name: "Frustración", exact: true })).toHaveAttribute("aria-checked", "false");
+      await expect(page.getByRole("radio", { name: "Estrés", exact: true })).toHaveAttribute("aria-checked", "false");
     });
   }
 
   test("valida todos los campos de la primera pantalla y conserva lo elegido", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("radio", { name: "Enojo", exact: true }).click();
+    await page.getByRole("radio", { name: "Ansiedad", exact: true }).click();
     await page.getByRole("button", { name: "Encontrar mi pausa" }).click();
 
     await expect(page.getByText("Elige cómo te sientes.")).toHaveCount(0);
     await expect(page.getByText("Elige qué tan intensa es la emoción.")).toBeVisible();
     await expect(page.getByText("Elige lo que ocurrió.")).toBeVisible();
     await expect(page.getByText("Elige cuánto tiempo quieres pausar.")).toBeVisible();
-    await expect(page.getByRole("radio", { name: "Enojo", exact: true })).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByRole("radio", { name: "Ansiedad", exact: true })).toHaveAttribute("aria-checked", "true");
   });
 
   test("exige intensidad y paso en la tercera pantalla", async ({ page }) => {
     await page.goto("/");
-    await llenarPantallaSentir(page, { emocion: "Inquietud", intensidad: "4", situacion: SITUACIONES[2].texto, minutos: "2 min" });
+    await llenarPantallaSentir(page, { emocion: "Tristeza", intensidad: "4", situacion: SITUACIONES[2].texto, minutos: "2 min" });
     await encontrarPausa(page);
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
 
@@ -86,7 +86,7 @@ test.describe("recorrido de pausa", () => {
   test("temporizador: detener, reanudar y fin del tiempo", async ({ page }) => {
     await page.clock.install();
     await page.goto("/");
-    await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "8", situacion: SITUACIONES[1].texto, minutos: "2 min" });
+    await llenarPantallaSentir(page, { emocion: "Ansiedad", intensidad: "8", situacion: SITUACIONES[1].texto, minutos: "2 min" });
     await encontrarPausa(page);
 
     const reloj = page.getByRole("timer", { name: "Tiempo restante" });
@@ -124,7 +124,7 @@ test.describe("recorrido de pausa", () => {
     await page.keyboard.press("Escape");
     await expect(dialogo).toBeHidden();
 
-    await llenarPantallaSentir(page, { emocion: "Frustración", intensidad: "5", situacion: SITUACIONES[0].texto, minutos: "2 min" });
+    await llenarPantallaSentir(page, { emocion: "Estrés", intensidad: "5", situacion: SITUACIONES[0].texto, minutos: "2 min" });
     await encontrarPausa(page);
     await abrir.click();
     await expect(dialogo).toBeVisible();
@@ -140,7 +140,7 @@ test.describe("recorrido de pausa", () => {
     const aviso = page.getByText("Esta herramienta no reemplaza la atención profesional.", { exact: true });
     await expect(aviso).toBeVisible();
 
-    await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "3", situacion: SITUACIONES[2].texto, minutos: "2 min" });
+    await llenarPantallaSentir(page, { emocion: "Ansiedad", intensidad: "3", situacion: SITUACIONES[2].texto, minutos: "2 min" });
     await encontrarPausa(page);
     await expect(aviso).toBeVisible();
 
@@ -160,7 +160,7 @@ test.describe("recorrido de pausa", () => {
       page.getByText("Para esta demostración, usa una situación ficticia y evita datos personales."),
     ).toBeVisible();
 
-    await llenarPantallaSentir(page, { emocion: "Inquietud", intensidad: "4", situacion: "Otros.", minutos: "2 min" });
+    await llenarPantallaSentir(page, { emocion: "Tristeza", intensidad: "4", situacion: "Otros.", minutos: "2 min" });
     await encontrarPausa(page);
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
     await page.locator("section").filter({ hasText: "¿Cómo te sientes ahora?" }).getByRole("radio", { name: "3", exact: true }).click();
@@ -171,7 +171,7 @@ test.describe("recorrido de pausa", () => {
 
   test("la descripción de Otros tiene límite de 200 caracteres y aparece en el resumen", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("radio", { name: "Enojo", exact: true }).click();
+    await page.getByRole("radio", { name: "Ansiedad", exact: true }).click();
     await page.getByRole("radiogroup", { name: "¿Qué tan intensa es?" }).getByRole("radio", { name: "6", exact: true }).click();
     await page.getByRole("radio", { name: "Otros.", exact: true }).click();
     await page.getByRole("radiogroup", { name: "¿Cuánto tiempo quieres pausar?" }).getByRole("radio", { name: "2 min" }).click();

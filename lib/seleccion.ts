@@ -8,9 +8,9 @@ import {
 } from "./catalogo";
 
 const ACTIVIDAD_POR_EMOCION: Record<Emocion, Actividad> = {
-  enojo: VOLVER_AL_PRESENTE,
-  frustracion: ANTES_DE_RESPONDER,
-  inquietud: UNA_COSA_A_LA_VEZ,
+  estres: UNA_COSA_A_LA_VEZ,
+  ansiedad: VOLVER_AL_PRESENTE,
+  tristeza: ANTES_DE_RESPONDER,
 };
 
 export function elegirActividad(emocion: Emocion, minutos: Minutos): Actividad {

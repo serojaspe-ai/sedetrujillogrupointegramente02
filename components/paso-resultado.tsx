@@ -16,7 +16,7 @@ type Props = {
 };
 
 export function PasoResultado({ respuestas, resultado, onReiniciar }: Props) {
-  const [frase] = useState(() => elegirFrase(respuestas.emocion ?? "inquietud"));
+  const [frase] = useState(() => elegirFrase(respuestas.emocion ?? "ansiedad"));
   const intensidadInicial = respuestas.intensidad ?? 0;
 
   const situacionTexto =

@@ -37,20 +37,20 @@ type Props = {
 };
 
 const EMOCION_VISUAL: Record<Emocion, { borde: string; bordeSuave: string; sombra: string }> = {
-  frustracion: {
-    borde: "border-rosa-viva",
-    bordeSuave: "border-rosa-viva/35",
-    sombra: "shadow-[0_14px_30px_-12px_rgba(244,114,182,0.85)]",
+  estres: {
+    borde: "border-[#38bdf8]",
+    bordeSuave: "border-[#38bdf8]/35",
+    sombra: "shadow-[0_14px_30px_-12px_rgba(56,189,248,0.85)]",
   },
-  enojo: {
-    borde: "border-[#fb7185]",
-    bordeSuave: "border-[#fb7185]/35",
-    sombra: "shadow-[0_14px_30px_-12px_rgba(251,113,133,0.85)]",
-  },
-  inquietud: {
+  ansiedad: {
     borde: "border-turquesa-viva",
     bordeSuave: "border-turquesa-viva/35",
     sombra: "shadow-[0_14px_30px_-12px_rgba(45,212,191,0.85)]",
+  },
+  tristeza: {
+    borde: "border-rosa-viva",
+    bordeSuave: "border-rosa-viva/35",
+    sombra: "shadow-[0_14px_30px_-12px_rgba(244,114,182,0.85)]",
   },
 };
 

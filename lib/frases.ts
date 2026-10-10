@@ -1,26 +1,26 @@
 import type { Emocion } from "./catalogo";
 
 export const FRASES: Record<Emocion, readonly string[]> = {
-  frustracion: [
-    "Tu esfuerzo cuenta, incluso en los días difíciles. Sigue a tu ritmo ☀️💛",
-    "Puedes volver a intentarlo. Cada pequeño paso abre una nueva posibilidad 🌱😊",
-    "Hoy también mereces paciencia, cariño y un momento para ti 🌷💛",
-    "Darte una pausa también es una forma de seguir adelante 🌿✨",
-    "Hay muchas cosas bonitas en ti. Date tiempo para reconocerlas 🌼😊",
+  estres: [
+    "Una cosa a la vez. Entre tantos pendientes, también mereces un momento para ti 🌿😊",
+    "Tienes permiso para hacer una pausa y continuar a tu ritmo ☀️💛",
+    "Cada pequeño avance cuenta. Date crédito por lo que ya has podido hacer 🌱✨",
+    "Puedes empezar por algo sencillo y dejar espacio para cuidarte 🌼😊",
+    "Trátate con la misma paciencia que le darías a alguien que quieres 🤗💛",
   ],
-  enojo: [
-    "Tu voz importa. Puedes expresar lo que necesitas con respeto y cariño 💛✨",
-    "Date un momento para elegir las palabras que te gustaría compartir 🌷😊",
-    "Lo que sientes merece espacio, y tú mereces cuidarte mientras lo expresas 🌿💛",
-    "Cada pausa te da una oportunidad para elegir cómo quieres responder ☀️✨",
-    "Puedes poner límites y cuidar tus relaciones. Tu bienestar también cuenta 🌼💛",
+  ansiedad: [
+    "Puedes ir paso a paso. Date tiempo para elegir cómo continuar 🌿💛",
+    "Concéntrate en un paso pequeño y posible. Ese también cuenta 🌱😊",
+    "Mereces paciencia y cariño mientras atraviesas este momento 🌷✨",
+    "Puedes buscar compañía y compartir lo que sientes. Mereces ser escuchado 🤗💛",
+    "Date espacio para cuidar de ti mientras encuentras tu siguiente paso ☀️😊",
   ],
-  inquietud: [
-    "Ve de una cosa a la vez. Los pequeños pasos también te llevan hacia adelante 🌱😊",
-    "Date permiso para ir a tu ritmo y reconocer cada pequeño avance ☀️💛",
-    "Empieza por algo sencillo y posible. Ese primer paso también cuenta 🌼✨",
-    "Entre todos tus pendientes, también hay espacio para cuidarte 🌷💛",
-    "Hoy puedes dar un paso pequeño y sentir orgullo por haberlo intentado 🌈😊",
+  tristeza: [
+    "Hoy mereces tratarte con cariño, tal como estás 🌷💛",
+    "En los días difíciles, los pequeños gestos de cuidado también cuentan 🌼✨",
+    "Tu presencia importa. Mereces compañía, atención y cariño 🤗💛",
+    "Puedes acercarte a alguien de confianza y dejar que te escuche ☀️💛",
+    "Date permiso para avanzar despacito. Cada pequeño intento cuenta 🌱😊",
   ],
 };
 
