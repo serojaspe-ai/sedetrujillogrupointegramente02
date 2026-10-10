@@ -4,10 +4,8 @@ import { useState } from "react";
 import { Clock, MessageSquare, Users, type LucideIcon } from "lucide-react";
 import {
   DESCRIPCION_PASOS_SIGUIENTES,
-  EMOCIONES,
   PASO_SIGUIENTE_IDS,
   PASOS_SIGUIENTES,
-  type Emocion,
   type PasoSiguienteId,
 } from "@/lib/catalogo";
 import { BASE_BOTON, RELLENO_EXITO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
@@ -19,7 +17,6 @@ export type ResultadoPausa = {
 };
 
 type Props = {
-  emocion: Emocion | null;
   registroId: string | null;
   onFinalizar: (resultado: ResultadoPausa) => void;
 };
@@ -30,7 +27,7 @@ const ICONOS_PASO: Record<PasoSiguienteId, { Icono: LucideIcon; fondo: string }>
   apoyo: { Icono: Users, fondo: "bg-turquesa-suave text-[#0f766e]" },
 };
 
-export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
+export function PasoSiguiente({ registroId, onFinalizar }: Props) {
   const [guardando, setGuardando] = useState(false);
   const [errorGuardado, setErrorGuardado] = useState<string | null>(null);
   const [intensidadAhora, setIntensidadAhora] = useState<number | null>(null);
@@ -65,13 +62,11 @@ export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
     onFinalizar({ intensidadFinal: intensidadAhora, accionElegida: pasoElegido });
   }
 
-  const nombreEmocion = emocion ? EMOCIONES[emocion].toLowerCase() : "esta emoción";
-
   return (
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-4">
         <h2 id="pregunta-ahora" className="text-lg font-semibold">
-          ¿Qué tan fuerte sientes {nombreEmocion} ahora?
+          ¿Qué tan intenso es lo que sientes ahora?
         </h2>
         <SelectorIntensidad
           id="pregunta-ahora"

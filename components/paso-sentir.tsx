@@ -134,7 +134,7 @@ export function PasoSentir({
         </div>
       </Bloque>
 
-      <Bloque id="pregunta-intensidad" titulo="¿Qué tan intensa es?" error={errores.intensidad}>
+      <Bloque id="pregunta-intensidad" titulo="¿Cuál es la intensidad de lo que sientes?" error={errores.intensidad}>
         <SelectorIntensidad
           id="pregunta-intensidad"
           valor={respuestas.intensidad}

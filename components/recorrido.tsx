@@ -142,7 +142,6 @@ export function Recorrido() {
           )}
           {paso === "siguiente" && (
             <PasoSiguiente
-              emocion={respuestas.emocion}
               registroId={pausa?.registroId ?? null}
               onFinalizar={(datos) => {
                 setResultado(datos);
