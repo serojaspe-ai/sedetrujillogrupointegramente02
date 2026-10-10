@@ -52,6 +52,11 @@ const EMOCION_VISUAL: Record<Emocion, { borde: string; bordeSuave: string; sombr
     bordeSuave: "border-rosa-viva/35",
     sombra: "shadow-[0_14px_30px_-12px_rgba(244,114,182,0.85)]",
   },
+  enojo: {
+    borde: "border-[#fb923c]",
+    bordeSuave: "border-[#fb923c]/35",
+    sombra: "shadow-[0_14px_30px_-12px_rgba(251,146,60,0.85)]",
+  },
 };
 
 export function validarRespuestas(
@@ -101,7 +106,7 @@ export function PasoSentir({
   return (
     <div className="flex flex-col gap-8">
       <Bloque id="pregunta-emocion" titulo="¿Qué estás sintiendo?" error={errores.emocion}>
-        <div role="radiogroup" aria-labelledby="pregunta-emocion" className="grid grid-cols-3 gap-3">
+        <div role="radiogroup" aria-labelledby="pregunta-emocion" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {(Object.keys(EMOCIONES) as Emocion[]).map((id) => {
             const { borde, bordeSuave, sombra } = EMOCION_VISUAL[id];
             const activo = respuestas.emocion === id;

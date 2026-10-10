@@ -11,6 +11,7 @@ const ACTIVIDAD_POR_EMOCION: Record<Emocion, Actividad> = {
   estres: UNA_COSA_A_LA_VEZ,
   ansiedad: VOLVER_AL_PRESENTE,
   tristeza: ANTES_DE_RESPONDER,
+  enojo: ANTES_DE_RESPONDER,
 };
 
 export function elegirActividad(emocion: Emocion, minutos: Minutos): Actividad {

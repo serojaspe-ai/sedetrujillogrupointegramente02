@@ -6,6 +6,7 @@ describe("frases de cierre", () => {
     expect(FRASES.estres).toHaveLength(5);
     expect(FRASES.ansiedad).toHaveLength(5);
     expect(FRASES.tristeza).toHaveLength(5);
+    expect(FRASES.enojo).toHaveLength(5);
   });
 
   it("elige la frase de la emoción indicada según el azar", () => {

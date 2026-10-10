@@ -190,6 +190,31 @@ test.describe("recorrido de pausa", () => {
     await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toContainText("Tuve un malentendido con una profesora.");
   });
 
+  test("completa el recorrido eligiendo Enojo y muestra la frase de esa emoción", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("radiogroup", { name: "¿Qué estás sintiendo?" }).getByRole("radio")).toHaveCount(4);
+    await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "6", situacion: SITUACIONES[0].texto, minutos: "5 min" });
+    await encontrarPausa(page);
+    await page.getByRole("button", { name: "Terminé mi pausa" }).click();
+    await page.locator("section").filter({ hasText: "¿Cómo te sientes ahora?" }).getByRole("radio", { name: "2", exact: true }).click();
+    await page.getByRole("radio", { name: "Esperar antes de responder" }).click();
+    await page.getByRole("button", { name: "Elegir este paso" }).click();
+
+    const resumen = page.getByRole("region", { name: "Tu siguiente paso" });
+    await expect(resumen).toContainText("Enojo");
+    await expect(resumen).toContainText("6/10");
+    await expect(resumen).toContainText("2/10");
+    const frases = [
+      "Puedes darte un momento antes de responder",
+      "Tus palabras importan",
+      "Hacer una pausa también es cuidarte",
+      "No tienes que resolverlo todo ahora",
+      "Mereces expresar lo que te pasa",
+    ];
+    const texto = await page.locator("p.text-xl").innerText();
+    expect(frases.some((f) => texto.includes(f))).toBe(true);
+  });
+
   test("muestra enlaces oficiales de la UCV en la primera pantalla", async ({ page }) => {
     await page.goto("/");
     const pie = page.getByRole("navigation", { name: "Enlaces de la UCV" });

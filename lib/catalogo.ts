@@ -1,10 +1,11 @@
-export const EMOCION_IDS = ["estres", "ansiedad", "tristeza"] as const;
+export const EMOCION_IDS = ["estres", "ansiedad", "tristeza", "enojo"] as const;
 export type Emocion = (typeof EMOCION_IDS)[number];
 
 export const EMOCIONES: Record<Emocion, string> = {
   estres: "Estrés",
   ansiedad: "Ansiedad",
   tristeza: "Tristeza",
+  enojo: "Enojo",
 };
 
 export const TIEMPO_OPCIONES = [2, 5, 10] as const;

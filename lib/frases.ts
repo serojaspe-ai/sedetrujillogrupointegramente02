@@ -22,6 +22,13 @@ export const FRASES: Record<Emocion, readonly string[]> = {
     "Puedes acercarte a alguien de confianza y dejar que te escuche ☀️💛",
     "Date permiso para avanzar despacito. Cada pequeño intento cuenta 🌱😊",
   ],
+  enojo: [
+    "Puedes darte un momento antes de responder. Lo que sientes merece ser escuchado 💛🌿",
+    "Tus palabras importan. Date tiempo para encontrar cómo expresar lo que necesitas 😊✨",
+    "Hacer una pausa también es cuidarte. Puedes continuar a tu ritmo ☀️💛",
+    "No tienes que resolverlo todo ahora. Un pequeño paso puede ser suficiente por hoy 🌱😊",
+    "Mereces expresar lo que te pasa con respeto y sentirte escuchado 🤗💛",
+  ],
 };
 
 export function elegirFrase(emocion: Emocion, azar: () => number = Math.random): string {

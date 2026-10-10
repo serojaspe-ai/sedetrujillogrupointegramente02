@@ -4,12 +4,14 @@ const PALETA: Record<Emocion, { cara: string; trazo: string }> = {
   estres: { cara: "#E0F2FE", trazo: "#0369A1" },
   ansiedad: { cara: "#CCFBF1", trazo: "#115E59" },
   tristeza: { cara: "#FCE7F3", trazo: "#9D174D" },
+  enojo: { cara: "#FFE4D6", trazo: "#C2410C" },
 };
 
 export const REACCION_EMOCION: Record<Emocion, string> = {
   estres: "motion-safe:animate-sacudir",
   ansiedad: "motion-safe:animate-vibrar",
   tristeza: "motion-safe:animate-respirar",
+  enojo: "motion-safe:animate-pop",
 };
 
 export function IlustracionEmocion({
@@ -53,6 +55,18 @@ export function IlustracionEmocion({
           <circle cx="41" cy="36" r="4" />
           <path d="M26 47 Q32 42 38 47" />
           <path d="M54 12 Q57 17 54 20 Q51 17 54 12 Z" fill="#2DD4BF" stroke="none" />
+        </>
+      )}
+      {emocion === "enojo" && (
+        <>
+          <path d="M14 24 L28 33" />
+          <path d="M50 24 L36 33" />
+          <path d="M20 39 H28" />
+          <path d="M36 39 H44" />
+          <path d="M22 50 H42" />
+          <path d="M26 46 V50" />
+          <path d="M32 46 V50" />
+          <path d="M38 46 V50" />
         </>
       )}
       {emocion === "tristeza" && (
