@@ -220,7 +220,7 @@ test.describe("recorrido de pausa", () => {
       "No tienes que resolverlo todo ahora",
       "Mereces expresar lo que te pasa",
     ];
-    const texto = await page.locator("p.text-xl").innerText();
+    const texto = await page.locator("p.text-2xl").innerText();
     expect(frases.some((f) => texto.includes(f))).toBe(true);
   });
 

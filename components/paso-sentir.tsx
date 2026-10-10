@@ -2,6 +2,15 @@
 
 import { useState } from "react";
 import {
+  CloudRain,
+  Home,
+  ListTodo,
+  MoreHorizontal,
+  Timer,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import {
   DESCRIPCION_MAX_CARACTERES,
   EMOCIONES,
   ENLACES,
@@ -34,6 +43,14 @@ type Props = {
   errorServidor: string | null;
   onCambiar: (cambio: Partial<RespuestasSentir>) => void;
   onEncontrar: (solicitud: SolicitudPausa) => void;
+};
+
+const ICONOS_SITUACION: Record<Situacion, { Icono: LucideIcon; fondo: string }> = {
+  "trabajo-grupo": { Icono: Users, fondo: "bg-celeste-suave text-[#0369a1]" },
+  "discusion-casa": { Icono: Home, fondo: "bg-rosa-suave text-[#be185d]" },
+  "tareas-acumuladas": { Icono: ListTodo, fondo: "bg-turquesa-suave text-[#0f766e]" },
+  "no-salio-esperado": { Icono: CloudRain, fondo: "bg-celeste-suave text-[#0369a1]" },
+  otros: { Icono: MoreHorizontal, fondo: "bg-rosa-suave text-[#be185d]" },
 };
 
 const EMOCION_VISUAL: Record<Emocion, { borde: string; bordeSuave: string; sombra: string }> = {
@@ -157,8 +174,17 @@ export function PasoSentir({
                   activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
+                <span
+                  aria-hidden="true"
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${ICONOS_SITUACION[id].fondo}`}
+                >
+                  {(() => {
+                    const Icono = ICONOS_SITUACION[id].Icono;
+                    return <Icono size={22} strokeWidth={2.2} />;
+                  })()}
+                </span>
+                <span className="flex-1">{SITUACIONES[id]}</span>
                 <MarcaSeleccion activo={activo} />
-                {SITUACIONES[id]}
               </button>
             );
           })}
@@ -198,12 +224,13 @@ export function PasoSentir({
                 role="radio"
                 aria-checked={activo}
                 onClick={() => cambiar({ minutos })}
-                className={`${BASE_BOTON} h-12 rounded-xl border text-base font-semibold ${
+                className={`${BASE_BOTON} flex h-16 flex-col items-center justify-center gap-1 rounded-xl border text-base font-semibold ${
                   activo
                     ? "border-pausa bg-gradient-to-r from-pausa to-[#1e9be8] text-white shadow-lg shadow-pausa/30"
                     : "border-linea bg-white text-pausa hover:border-pausa hover:shadow-sm"
                 }`}
               >
+                <Timer aria-hidden="true" size={18} />
                 {minutos} min
               </button>
             );

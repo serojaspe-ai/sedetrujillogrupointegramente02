@@ -108,9 +108,9 @@ export function PasoSiguiente({ registroId, onFinalizar }: Props) {
               >
                 <span
                   aria-hidden="true"
-                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${fondo}`}
+                  className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl ${fondo}`}
                 >
-                  <Icono size={26} strokeWidth={2.2} />
+                  <Icono size={30} strokeWidth={2.2} />
                 </span>
                 <span className="flex flex-1 flex-col gap-0.5">
                   <span className="text-base font-semibold text-tinta">{PASOS_SIGUIENTES[id]}</span>

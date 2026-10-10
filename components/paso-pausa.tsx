@@ -164,11 +164,11 @@ export function PasoPausa({ pausa, onSiguiente }: Props) {
 
           <div className="flex items-start gap-4" key={indice}>
             <span
-              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm motion-safe:animate-pop ${
+              className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-white shadow-sm motion-safe:animate-pop ${
                 COLORES_PASO[indice % COLORES_PASO.length]
               }`}
             >
-              <Icono aria-hidden="true" size={28} strokeWidth={2.2} />
+              <Icono aria-hidden="true" size={36} strokeWidth={2.2} />
             </span>
             <p className="pt-1 text-xl font-medium leading-relaxed text-tinta motion-safe:animate-entrada">
               {pausa.pasos[indice]}

@@ -6,8 +6,26 @@ import { EMOCIONES, PASOS_SIGUIENTES, SITUACION_OTROS, SITUACIONES } from "@/lib
 import { mensajeCierre } from "@/lib/cierre";
 import { elegirFrase } from "@/lib/frases";
 import { BASE_BOTON } from "./estilos";
+import { NubeAcompanante } from "./nube-acompanante";
 import type { ResultadoPausa } from "./paso-siguiente";
 import type { RespuestasSentir } from "./paso-sentir";
+
+function BarraIntensidad({ etiqueta, valor, color }: { etiqueta: string; valor: number; color: string }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-baseline justify-between text-sm">
+        <span className="font-medium text-tinta-suave">{etiqueta}</span>
+        <span className="font-bold tabular-nums text-tinta">{valor}/10</span>
+      </div>
+      <div className="h-3 overflow-hidden rounded-full bg-white/80" role="img" aria-label={`${etiqueta}: ${valor} de 10`}>
+        <div
+          className={`h-full rounded-full bg-gradient-to-r ${color} transition-[width] duration-700 ease-out motion-reduce:transition-none`}
+          style={{ width: `${valor * 10}%` }}
+        />
+      </div>
+    </div>
+  );
+}
 
 type Props = {
   respuestas: RespuestasSentir;
@@ -58,9 +76,13 @@ export function PasoResultado({ respuestas, resultado, onReiniciar }: Props) {
           </h2>
         </div>
 
-        <p className="rounded-xl bg-celeste-suave p-4 text-base leading-relaxed text-tinta">
-          {mensajeCierre(intensidadInicial, resultado.intensidadFinal)}
-        </p>
+        <div className="flex flex-col gap-3 rounded-xl bg-celeste-suave p-4">
+          <BarraIntensidad etiqueta="Al inicio" valor={intensidadInicial} color="from-rosa-viva to-pink-500" />
+          <BarraIntensidad etiqueta="Ahora" valor={resultado.intensidadFinal} color="from-turquesa-viva to-sky-400" />
+          <p className="pt-1 text-base leading-relaxed text-tinta">
+            {mensajeCierre(intensidadInicial, resultado.intensidadFinal)}
+          </p>
+        </div>
 
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-base">
           <dt className="text-tinta-suave">Emoción</dt>
@@ -76,12 +98,12 @@ export function PasoResultado({ respuestas, resultado, onReiniciar }: Props) {
         </dl>
       </section>
 
-      <p
-        className="rounded-2xl bg-gradient-to-br from-rosa-suave via-celeste-suave to-turquesa-suave px-6 py-8 text-center text-xl leading-relaxed text-tinta motion-safe:animate-entrada"
-        aria-live="polite"
-      >
-        {frase}
-      </p>
+      <div className="flex flex-col items-center gap-4 rounded-2xl bg-gradient-to-br from-rosa-suave via-celeste-suave to-turquesa-suave px-6 py-8 text-center">
+        <NubeAcompanante className="h-20 w-20" />
+        <p className="text-2xl font-semibold leading-relaxed text-tinta motion-safe:animate-entrada sm:text-3xl" aria-live="polite">
+          {frase}
+        </p>
+      </div>
 
       <button
         type="button"

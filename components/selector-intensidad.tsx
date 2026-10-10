@@ -33,6 +33,17 @@ export function SelectorIntensidad({ id, valor, onChange, extremos }: Props) {
         </span>
       </div>
 
+      <div className="relative pt-3">
+        <div className="h-3 rounded-full bg-gradient-to-r from-teal-300 via-sky-300 to-pink-400" aria-hidden="true" />
+        {valor !== null && (
+          <span
+            aria-hidden="true"
+            className="absolute top-0 h-9 w-9 -translate-x-1/2 rounded-full border-[3px] border-white bg-pausa shadow-lg shadow-pausa/30 transition-[left] duration-500 ease-out motion-reduce:transition-none"
+            style={{ left: `${valor * 10}%` }}
+          />
+        )}
+      </div>
+
       <div role="radiogroup" aria-labelledby={id} className="grid grid-cols-11 gap-1 sm:gap-1.5">
         {INTENSIDADES.map((n) => {
           const activo = valor === n;
