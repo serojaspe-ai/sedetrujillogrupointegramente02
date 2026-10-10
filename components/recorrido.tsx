@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Leaf } from "lucide-react";
+import { NubeAcompanante } from "./nube-acompanante";
 import type { RespuestaPausa, SolicitudPausa } from "@/lib/esquemas";
 import { respuestaPausaSchema } from "@/lib/esquemas";
 import { Bienvenida } from "./bienvenida";
@@ -95,8 +95,8 @@ export function Recorrido() {
       </div>
 
       <header className="flex w-full max-w-xl items-center gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#1F7A6D] shadow-sm motion-safe:animate-pop">
-          <Leaf aria-hidden="true" size={24} />
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm motion-safe:animate-pop">
+          <NubeAcompanante className="h-[135%] w-[135%] max-w-none shrink-0" />
         </span>
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold text-tinta">Respira +</h1>
