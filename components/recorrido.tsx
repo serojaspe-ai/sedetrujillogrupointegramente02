@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Leaf } from "lucide-react";
 import type { RespuestaPausa, SolicitudPausa } from "@/lib/esquemas";
 import { respuestaPausaSchema } from "@/lib/esquemas";
+import { Bienvenida } from "./bienvenida";
 import { ContactoProfesional } from "./contacto-profesional";
 import { PasoPausa } from "./paso-pausa";
 import { PasoResultado } from "./paso-resultado";
@@ -44,6 +45,11 @@ export function Recorrido() {
   const [cargando, setCargando] = useState(false);
   const [errorServidor, setErrorServidor] = useState<string | null>(null);
   const [recorridoKey, setRecorridoKey] = useState(0);
+  const [bienvenida, setBienvenida] = useState(true);
+
+  if (bienvenida) {
+    return <Bienvenida onComenzar={() => setBienvenida(false)} />;
+  }
 
   function cambiarRespuestas(cambio: Partial<RespuestasSentir>) {
     setRespuestas((previo) => ({ ...previo, ...cambio }));

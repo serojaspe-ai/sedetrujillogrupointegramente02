@@ -25,6 +25,7 @@ test.describe("recorrido de pausa", () => {
   for (const situacion of SITUACIONES) {
     test(`completa el flujo para ${situacion.nombre}`, async ({ page }) => {
       await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
       await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
 
       await llenarPantallaSentir(page, {
@@ -61,6 +62,7 @@ test.describe("recorrido de pausa", () => {
 
   test("valida todos los campos de la primera pantalla y conserva lo elegido", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     await page.getByRole("radio", { name: "Ansiedad", exact: true }).click();
     await page.getByRole("button", { name: "Encontrar mi pausa" }).click();
 
@@ -73,6 +75,7 @@ test.describe("recorrido de pausa", () => {
 
   test("exige intensidad y paso en la tercera pantalla", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     await llenarPantallaSentir(page, { emocion: "Tristeza", intensidad: "4", situacion: SITUACIONES[2].texto, minutos: "2 min" });
     await encontrarPausa(page);
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
@@ -86,6 +89,7 @@ test.describe("recorrido de pausa", () => {
   test("temporizador: detener, reanudar y fin del tiempo", async ({ page }) => {
     await page.clock.install();
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     await llenarPantallaSentir(page, { emocion: "Ansiedad", intensidad: "8", situacion: SITUACIONES[1].texto, minutos: "2 min" });
     await encontrarPausa(page);
 
@@ -111,6 +115,7 @@ test.describe("recorrido de pausa", () => {
 
   test("muestra apoyo profesional desde cualquier pantalla", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     const abrir = page.getByRole("button", { name: "Quiero hablar con alguien" });
     const dialogo = page.getByRole("dialog", { name: "Hablar con alguien" });
 
@@ -137,6 +142,7 @@ test.describe("recorrido de pausa", () => {
 
   test("el aviso de no reemplazar la atención profesional aparece en todas las pantallas", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     const aviso = page.getByText("Esta herramienta no reemplaza la atención profesional.", { exact: true });
     await expect(aviso).toBeVisible();
 
@@ -150,6 +156,7 @@ test.describe("recorrido de pausa", () => {
 
   test("ofrece las cinco situaciones y permite continuar con Otros sin descripción", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     const grupo = page.getByRole("radiogroup", { name: "¿Qué ocurrió?" });
     await expect(grupo.getByRole("radio")).toHaveCount(5);
     await expect(page.getByLabel("Si quieres, cuéntanos un poco más")).toHaveCount(0);
@@ -171,6 +178,7 @@ test.describe("recorrido de pausa", () => {
 
   test("la descripción de Otros tiene límite de 200 caracteres y aparece en el resumen", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     await page.getByRole("radio", { name: "Ansiedad", exact: true }).click();
     await page.getByRole("radiogroup", { name: "¿Qué tan intensa es?" }).getByRole("radio", { name: "6", exact: true }).click();
     await page.getByRole("radio", { name: "Otros.", exact: true }).click();
@@ -192,6 +200,7 @@ test.describe("recorrido de pausa", () => {
 
   test("completa el recorrido eligiendo Enojo y muestra la frase de esa emoción", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     await expect(page.getByRole("radiogroup", { name: "¿Qué estás sintiendo?" }).getByRole("radio")).toHaveCount(4);
     await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "6", situacion: SITUACIONES[0].texto, minutos: "5 min" });
     await encontrarPausa(page);
@@ -215,8 +224,19 @@ test.describe("recorrido de pausa", () => {
     expect(frases.some((f) => texto.includes(f))).toBe(true);
   });
 
+  test("muestra la bienvenida antes de elegir la emoción", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "Este momento es para ti" })).toBeVisible();
+    await expect(page.getByText("Vamos a tu ritmo.")).toBeVisible();
+    await expect(page.getByRole("radio")).toHaveCount(0);
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
+    await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
+    await expect(page.getByRole("radiogroup", { name: "¿Qué estás sintiendo?" }).getByRole("radio")).toHaveCount(4);
+  });
+
   test("muestra enlaces oficiales de la UCV en la primera pantalla", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     const pie = page.getByRole("navigation", { name: "Enlaces de la UCV" });
     await expect(pie.getByRole("link", { name: "ucv.edu.pe" })).toHaveAttribute("href", "https://www.ucv.edu.pe/");
     await expect(pie.getByRole("link", { name: "Facebook" })).toHaveAttribute("href", "https://web.facebook.com/UCV.Peru");
