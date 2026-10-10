@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Clock, MessageSquare, Users, type LucideIcon } from "lucide-react";
 import {
   DESCRIPCION_PASOS_SIGUIENTES,
   EMOCIONES,
@@ -10,7 +11,6 @@ import {
   type PasoSiguienteId,
 } from "@/lib/catalogo";
 import { BASE_BOTON, RELLENO_EXITO, TARJETA_ACTIVA_SUAVE, TARJETA_BASE } from "./estilos";
-import { MarcaSeleccion } from "./marca-seleccion";
 import { SelectorIntensidad } from "./selector-intensidad";
 
 export type ResultadoPausa = {
@@ -24,6 +24,12 @@ type Props = {
   onFinalizar: (resultado: ResultadoPausa) => void;
 };
 
+const ICONOS_PASO: Record<PasoSiguienteId, { Icono: LucideIcon; fondo: string }> = {
+  esperar: { Icono: Clock, fondo: "bg-celeste-suave text-[#0369a1]" },
+  explicar: { Icono: MessageSquare, fondo: "bg-rosa-suave text-[#be185d]" },
+  apoyo: { Icono: Users, fondo: "bg-turquesa-suave text-[#0f766e]" },
+};
+
 export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
   const [guardando, setGuardando] = useState(false);
   const [errorGuardado, setErrorGuardado] = useState<string | null>(null);
@@ -34,7 +40,7 @@ export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
   async function confirmar() {
     const nuevosErrores = {
       intensidad: intensidadAhora === null ? "Elige qué tan fuerte la sientes ahora." : undefined,
-      paso: pasoElegido === null ? "Elige el pequeño paso que quieres dar." : undefined,
+      paso: pasoElegido === null ? "Elige lo que te ayudaría ahora." : undefined,
     };
     setErrores(nuevosErrores);
     if (intensidadAhora === null || pasoElegido === null) return;
@@ -59,22 +65,18 @@ export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
     onFinalizar({ intensidadFinal: intensidadAhora, accionElegida: pasoElegido });
   }
 
+  const nombreEmocion = emocion ? EMOCIONES[emocion].toLowerCase() : "esta emoción";
+
   return (
     <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-4">
         <h2 id="pregunta-ahora" className="text-lg font-semibold">
-          ¿Qué tan fuerte sientes esa emoción ahora?
+          ¿Qué tan fuerte sientes {nombreEmocion} ahora?
         </h2>
-        {emocion && (
-          <p className="text-sm font-medium text-pausa">Emoción elegida al inicio: {EMOCIONES[emocion]}</p>
-        )}
-        <p className="text-base leading-relaxed text-tinta-suave">
-          Marca del 0 al 10 cuánto la sientes en este momento. No hay una respuesta correcta.
-        </p>
         <SelectorIntensidad
           id="pregunta-ahora"
           valor={intensidadAhora}
-          extremos={["0: No la siento", "10: La siento muy fuerte"]}
+          extremos={["0: Nada", "10: Muy fuerte"]}
           onChange={(valor) => {
             setIntensidadAhora(valor);
             setErrores((previo) => ({ ...previo, intensidad: undefined }));
@@ -87,13 +89,14 @@ export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
         )}
       </section>
 
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-4">
         <h2 id="pregunta-paso" className="text-lg font-semibold">
-          ¿Qué pequeño paso quieres dar ahora?
+          ¿Qué te ayudaría ahora?
         </h2>
-        <div role="radiogroup" aria-labelledby="pregunta-paso" className="flex flex-col gap-3">
+        <div role="radiogroup" aria-labelledby="pregunta-paso" className="grid gap-4">
           {PASO_SIGUIENTE_IDS.map((id) => {
             const activo = pasoElegido === id;
+            const { Icono, fondo } = ICONOS_PASO[id];
             return (
               <button
                 key={id}
@@ -104,26 +107,30 @@ export function PasoSiguiente({ emocion, registroId, onFinalizar }: Props) {
                   setPasoElegido(id);
                   setErrores((previo) => ({ ...previo, paso: undefined }));
                 }}
-                className={`${TARJETA_BASE} flex min-h-14 items-start gap-3 rounded-2xl border bg-white px-4 py-4 text-left text-base ${
+                className={`${TARJETA_BASE} flex items-center gap-4 rounded-2xl border bg-white p-4 text-left ${
                   activo ? TARJETA_ACTIVA_SUAVE : "border-linea"
                 }`}
               >
-                <span className="pt-0.5">
-                  <MarcaSeleccion activo={activo} />
+                <span
+                  aria-hidden="true"
+                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${fondo}`}
+                >
+                  <Icono size={26} strokeWidth={2.2} />
                 </span>
-                <span className="flex flex-col gap-1">
-                  <span className="font-semibold text-tinta">{PASOS_SIGUIENTES[id]}</span>
-                  <span className="text-sm leading-relaxed text-tinta-suave">
-                    {DESCRIPCION_PASOS_SIGUIENTES[id]}
-                  </span>
+                <span className="flex flex-1 flex-col gap-0.5">
+                  <span className="text-base font-semibold text-tinta">{PASOS_SIGUIENTES[id]}</span>
+                  <span className="text-sm text-tinta-suave">{DESCRIPCION_PASOS_SIGUIENTES[id]}</span>
                 </span>
+                <span
+                  aria-hidden="true"
+                  className={`h-5 w-5 shrink-0 rounded-full border-2 ${
+                    activo ? "border-pausa bg-pausa" : "border-tinta-suave/40 bg-white"
+                  }`}
+                />
               </button>
             );
           })}
         </div>
-        <p className="text-sm leading-relaxed text-tinta-suave">
-          Puedes elegir lo que te sirva ahora y cambiar de idea después.
-        </p>
         {errores.paso && (
           <p role="alert" className="text-sm font-medium text-alerta">
             {errores.paso}

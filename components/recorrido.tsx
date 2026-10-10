@@ -25,7 +25,7 @@ const ORDEN: Paso[] = ["sentir", "pausa", "siguiente"];
 const MENSAJES: Record<Paso, string> = {
   sentir: "Tómate tu tiempo. No hay respuestas correctas.",
   pausa: "Respira a tu ritmo. Solo sigue los pasos, sin prisa.",
-  siguiente: "Date un momento para reconocer cómo te sientes y elegir qué hacer después.",
+  siguiente: "¿Cómo estás después de tu pausa?",
   resultado: "Gracias por acompañarte en esta pausa.",
 };
 

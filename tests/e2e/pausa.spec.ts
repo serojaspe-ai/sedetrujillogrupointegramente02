@@ -43,13 +43,13 @@ test.describe("recorrido de pausa", () => {
       await page.getByRole("button", { name: "Terminé mi pausa" }).click();
       await expect(page.getByRole("heading", { name: "Mi siguiente paso", exact: true })).toBeVisible();
 
-      await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes esa emoción ahora?" }).getByRole("radio", { name: "6", exact: true }).click();
-      await page.getByRole("radio", { name: "Decir cómo me siento y qué necesito" }).click();
+      await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes" }).getByRole("radio", { name: "6", exact: true }).click();
+      await page.getByRole("radio", { name: "Expresar lo que siento" }).click();
       await page.getByRole("button", { name: "Ver mi resumen" }).click();
 
       const resumen = page.getByRole("region", { name: "Tu siguiente paso" });
       await expect(resumen).toContainText(situacion.texto);
-      await expect(resumen).toContainText("Decir cómo me siento y qué necesito");
+      await expect(resumen).toContainText("Expresar lo que siento");
       await expect(resumen).toContainText("Intensidad inicial");
       await expect(resumen).toContainText("7/10");
       await expect(resumen).toContainText("6/10");
@@ -82,7 +82,7 @@ test.describe("recorrido de pausa", () => {
 
     await page.getByRole("button", { name: "Ver mi resumen" }).click();
     await expect(page.getByText("Elige qué tan fuerte la sientes ahora.")).toBeVisible();
-    await expect(page.getByText("Elige el pequeño paso que quieres dar.")).toBeVisible();
+    await expect(page.getByText("Elige lo que te ayudaría ahora.")).toBeVisible();
     await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toHaveCount(0);
   });
 
@@ -170,8 +170,8 @@ test.describe("recorrido de pausa", () => {
     await llenarPantallaSentir(page, { emocion: "Tristeza", intensidad: "4", situacion: "Otros.", minutos: "2 min" });
     await encontrarPausa(page);
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
-    await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes esa emoción ahora?" }).getByRole("radio", { name: "3", exact: true }).click();
-    await page.getByRole("radio", { name: "Hablar con alguien de confianza" }).click();
+    await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes" }).getByRole("radio", { name: "3", exact: true }).click();
+    await page.getByRole("radio", { name: "Buscar compañía" }).click();
     await page.getByRole("button", { name: "Ver mi resumen" }).click();
     await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toContainText("Otros.");
   });
@@ -192,8 +192,8 @@ test.describe("recorrido de pausa", () => {
     await campo.fill("Tuve un malentendido con una profesora.");
     await encontrarPausa(page);
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
-    await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes esa emoción ahora?" }).getByRole("radio", { name: "5", exact: true }).click();
-    await page.getByRole("radio", { name: "Darme un poco más de tiempo" }).click();
+    await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes" }).getByRole("radio", { name: "5", exact: true }).click();
+    await page.getByRole("radio", { name: "Darme más tiempo" }).click();
     await page.getByRole("button", { name: "Ver mi resumen" }).click();
     await expect(page.getByRole("region", { name: "Tu siguiente paso" })).toContainText("Tuve un malentendido con una profesora.");
   });
@@ -205,8 +205,8 @@ test.describe("recorrido de pausa", () => {
     await llenarPantallaSentir(page, { emocion: "Enojo", intensidad: "6", situacion: SITUACIONES[0].texto, minutos: "5 min" });
     await encontrarPausa(page);
     await page.getByRole("button", { name: "Terminé mi pausa" }).click();
-    await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes esa emoción ahora?" }).getByRole("radio", { name: "2", exact: true }).click();
-    await page.getByRole("radio", { name: "Darme un poco más de tiempo" }).click();
+    await page.locator("section").filter({ hasText: "¿Qué tan fuerte sientes" }).getByRole("radio", { name: "2", exact: true }).click();
+    await page.getByRole("radio", { name: "Darme más tiempo" }).click();
     await page.getByRole("button", { name: "Ver mi resumen" }).click();
 
     const resumen = page.getByRole("region", { name: "Tu siguiente paso" });

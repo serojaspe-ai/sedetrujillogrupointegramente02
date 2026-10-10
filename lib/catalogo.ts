@@ -35,15 +35,15 @@ export const PASO_SIGUIENTE_IDS = ["esperar", "explicar", "apoyo"] as const;
 export type PasoSiguienteId = (typeof PASO_SIGUIENTE_IDS)[number];
 
 export const PASOS_SIGUIENTES: Record<PasoSiguienteId, string> = {
-  esperar: "Darme un poco más de tiempo",
-  explicar: "Decir cómo me siento y qué necesito",
-  apoyo: "Hablar con alguien de confianza",
+  esperar: "Darme más tiempo",
+  explicar: "Expresar lo que siento",
+  apoyo: "Buscar compañía",
 };
 
 export const DESCRIPCION_PASOS_SIGUIENTES: Record<PasoSiguienteId, string> = {
-  esperar: "Esperar antes de responder un mensaje, discutir o tomar una decisión.",
-  explicar: "Por ejemplo: “Esto me molestó y necesito que lo conversemos con calma”.",
-  apoyo: "Buscar a un amigo, familiar o profesional para contarle lo que me pasa.",
+  esperar: "Responder después",
+  explicar: "Decir qué necesito",
+  apoyo: "Hablar con alguien",
 };
 
 export type Actividad = {
