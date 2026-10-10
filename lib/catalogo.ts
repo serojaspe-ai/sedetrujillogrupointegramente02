@@ -51,7 +51,7 @@ export type Actividad = {
 export const VOLVER_AL_PRESENTE: Actividad = {
   id: "volver-presente",
   nombre: "Volver al presente",
-  descripcion: "Conecta con lo que te rodea para salir del modo de alerta.",
+  descripcion: "Dedica un momento a observar lo que te rodea. Vamos paso a paso.",
   minutosSoportados: [2, 5, 10],
   pasos: [
     "Siéntate con los pies apoyados en el suelo.",

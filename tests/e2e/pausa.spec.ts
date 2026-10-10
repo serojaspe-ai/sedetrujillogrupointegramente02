@@ -38,7 +38,7 @@ test.describe("recorrido de pausa", () => {
 
       await expect(page.getByText(/Pausa adaptada con IA|Modo demo: actividad sin adaptación por IA/)).toBeVisible();
       await expect(page.getByRole("timer", { name: "Tiempo restante" })).toHaveText("05:00");
-      await expect(page.getByRole("list")).toContainText(/\S/);
+      await expect(page.getByRole("region", { name: "Indicación actual" })).toContainText(/\S/);
 
       await page.getByRole("button", { name: "Terminé mi pausa" }).click();
       await expect(page.getByRole("heading", { name: "Mi siguiente paso", exact: true })).toBeVisible();
@@ -99,11 +99,11 @@ test.describe("recorrido de pausa", () => {
     await page.clock.runFor(10_000);
     await expect(reloj).toHaveText("01:50");
 
-    await page.getByRole("button", { name: "Detener" }).click();
+    await page.getByRole("button", { name: "Pausar" }).click();
     await page.clock.runFor(30_000);
     await expect(reloj).toHaveText("01:50");
 
-    await page.getByRole("button", { name: "Reanudar" }).click();
+    await page.getByRole("button", { name: "Continuar", exact: true }).click();
     await page.clock.runFor(20_000);
     await expect(reloj).toHaveText("01:30");
 
@@ -232,6 +232,31 @@ test.describe("recorrido de pausa", () => {
     await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
     await expect(page.getByRole("heading", { name: "Cómo me siento", exact: true })).toBeVisible();
     await expect(page.getByRole("radiogroup", { name: "¿Qué estás sintiendo?" }).getByRole("radio")).toHaveCount(4);
+  });
+
+  test("navega las indicaciones sin reiniciar el temporizador", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await page.getByRole("button", { name: "Comenzar mi pausa" }).click();
+    await llenarPantallaSentir(page, { emocion: "Ansiedad", intensidad: "5", situacion: SITUACIONES[0].texto, minutos: "5 min" });
+    await encontrarPausa(page);
+
+    await expect(page.getByText(/^Indicación 1 de \d+$/)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Anterior" })).toBeDisabled();
+
+    await page.clock.runFor(30_000);
+    const reloj = page.getByRole("timer", { name: "Tiempo restante" });
+    await expect(reloj).toHaveText("04:30");
+
+    await page.getByRole("button", { name: "Siguiente" }).click();
+    await expect(page.getByText(/^Indicación 2 de \d+$/)).toBeVisible();
+    await expect(reloj).toHaveText("04:30");
+    await page.clock.runFor(10_000);
+    await expect(reloj).toHaveText("04:20");
+
+    await page.getByRole("button", { name: "Anterior" }).click();
+    await expect(page.getByText(/^Indicación 1 de \d+$/)).toBeVisible();
+    await expect(reloj).toHaveText("04:20");
   });
 
   test("muestra enlaces oficiales de la UCV en la primera pantalla", async ({ page }) => {
